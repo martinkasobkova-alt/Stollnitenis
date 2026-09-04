@@ -1,0 +1,1892 @@
+<title>SKST Králův Dvůr</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400;500;600;700&display=swap">
+
+<script>
+/* ===================================================================
+   NASTAVENÍ WEBU — tohle je jediné místo, kde se běžně něco mění.
+   =================================================================== */
+var NASTAVENI = {
+
+  // Video v sekci „Takhle to u nás v herně vypadá".
+  // Vyplň BUĎ youtube (jen to ID z adresy), NEBO soubor. YouTube má přednost.
+  video: {
+    youtube: 'IHa4if5xGfE',         // https://www.youtube.com/watch?v=IHa4if5xGfE
+    soubor:  'video/skst.mp4'       // když necháš prázdné youtube, hraje se tenhle soubor
+  },
+
+  // Zápis docházky. Necháváme prázdné — web volá vlastní /api/dochazka,
+  // které drží token na serveru. Adresu Apps Scriptu nastav ve Vercelu
+  // jako proměnnou prostředí, viz README.
+  dochazkaApi: '/api/dochazka',
+
+  // Pruh „Návrh webu" nahoře. Až web schválíte, přepni na false.
+  navrh: true
+};
+</script>
+
+<style>
+:root{
+  --paper:#FFF6EA;
+  --paper-2:#FDEEDC;
+  --card:#FFFFFF;
+  --ink:#241809;
+  --muted:#7C6752;
+  --line:#EBD9C3;
+
+  --ball:#FF6B15;
+  --ball-dark:#E05100;
+  --green:#0E7C5A;
+  --green-deep:#0A5B42;
+  --rubber:#DC2F32;
+  --wood:#D89A55;
+  --wood-dark:#A9682F;
+  --on-dark:#FFF6EA;
+  --on-dark-muted:#A9CFBE;
+  --btn-ink:#FFF6EA;
+
+  --f-display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Figtree","Segoe UI",system-ui,sans-serif;
+
+  --shell:1180px;
+  --pad:clamp(18px,4.5vw,44px);
+  --r:18px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#191007;
+    --paper-2:#22160C;
+    --card:#251A0F;
+    --ink:#FBEEDD;
+    --muted:#B49B80;
+    --line:#3A2919;
+    --ball:#FF8236;
+    --ball-dark:#FF6B15;
+    --green:#159A70;
+    --green-deep:#0C6E51;
+    --rubber:#F0484B;
+    --on-dark:#FFF6EA;
+    --on-dark-muted:#A9CFBE;
+    --btn-ink:#1B1207;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#191007;
+  --paper-2:#22160C;
+  --card:#251A0F;
+  --ink:#FBEEDD;
+  --muted:#B49B80;
+  --line:#3A2919;
+  --ball:#FF8236;
+  --ball-dark:#FF6B15;
+  --green:#159A70;
+  --green-deep:#0C6E51;
+  --rubber:#F0484B;
+  --btn-ink:#1B1207;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--f-body);font-size:17px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+h1,h2,h3{
+  font-family:var(--f-display);margin:0;line-height:1.02;
+  letter-spacing:-.03em;text-wrap:balance;font-weight:800;
+}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--ball);outline-offset:3px;border-radius:6px}
+img,svg{max-width:100%}
+
+.shell{max-width:var(--shell);margin:0 auto;padding-inline:var(--pad)}
+.eyebrow{
+  font-size:.74rem;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ball);margin-bottom:16px;
+}
+
+/* ---------- pruh návrhu ---------- */
+.strip{
+  position:sticky;top:0;z-index:80;
+  background:var(--ink);color:var(--paper);
+  font-size:.78rem;line-height:1.45;
+}
+.strip .shell{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:space-between;padding-block:8px}
+.strip b{font-weight:700}
+.toggle{
+  display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+  font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  border:1.5px solid rgba(255,246,234,.35);border-radius:999px;
+  padding:5px 13px 5px 10px;white-space:nowrap;user-select:none;
+}
+.toggle input{accent-color:var(--ball);margin:0;width:13px;height:13px}
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative;overflow:hidden;
+  background:
+    radial-gradient(70% 80% at 84% 22%, var(--paper-2), transparent 70%),
+    var(--paper);
+}
+nav.top{display:flex;flex-wrap:wrap;gap:12px 26px;align-items:center;justify-content:space-between;padding-block:24px}
+.wordmark{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--f-display);font-weight:800;font-size:1.06rem;letter-spacing:-.01em}
+.wordmark .dot{width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 33% 30%, #FFC08A, var(--ball));flex:0 0 auto}
+nav.top ul{display:flex;flex-wrap:wrap;gap:6px 20px;list-style:none;margin:0;padding:0;font-size:.92rem;font-weight:500}
+nav.top a{color:var(--muted);text-decoration:none;padding-block:4px}
+nav.top a:hover{color:var(--ball)}
+
+.hero-grid{
+  display:grid;grid-template-columns:1fr 1.05fr;
+  gap:clamp(24px,4vw,56px);align-items:center;
+  padding-block:clamp(24px,4vw,44px) clamp(40px,7vw,72px);
+}
+.hero h1{font-size:clamp(2.5rem,6.6vw,4.6rem);max-width:12ch}
+.hero h1 .hl{
+  color:var(--ball);
+  background:linear-gradient(transparent 68%, color-mix(in srgb, var(--ball) 24%, transparent) 0);
+}
+.hero .lead{margin-top:22px;font-size:clamp(1.04rem,1.6vw,1.22rem);color:var(--muted);max-width:38ch;line-height:1.55}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.btn{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:14px 24px;border-radius:999px;text-decoration:none;
+  font-family:var(--f-display);font-weight:700;font-size:1rem;
+  border:2px solid transparent;transition:transform .18s ease,box-shadow .18s ease,background .18s ease;
+}
+.btn-solid{background:var(--ball);color:var(--btn-ink);box-shadow:0 8px 0 -2px var(--ball-dark)}
+.btn-solid:hover{transform:translateY(-3px);box-shadow:0 11px 0 -2px var(--ball-dark)}
+.btn-line{border-color:var(--ink);color:var(--ink)}
+.btn-line:hover{transform:translateY(-3px);background:var(--ink);color:var(--paper)}
+
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:8px}
+  .hero .lead{max-width:46ch}
+  .scene{order:2;margin-top:6px}
+}
+
+/* ---------- hrací scéna v hlavičce ---------- */
+.scene{width:100%}
+
+/* ---------- fakta ---------- */
+.facts{padding-block:clamp(6px,2vw,10px) clamp(44px,7vw,74px)}
+.facts .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(238px,1fr))}
+.fcard{
+  background:var(--card);border:2px solid var(--line);border-radius:var(--r);
+  padding:24px 24px 26px;display:flex;flex-direction:column;gap:12px;
+}
+.fcard .ic{width:38px;height:38px;flex:0 0 auto}
+.fcard .val{font-family:var(--f-display);font-weight:800;font-size:1.5rem;line-height:1.12;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.fcard .lab{font-size:.88rem;color:var(--muted);line-height:1.45}
+
+/* ---------- obecná sekce ---------- */
+.sec{padding-block:clamp(44px,6.4vw,78px);scroll-margin-top:60px}
+.sec h2{font-size:clamp(1.85rem,4.2vw,3rem);max-width:17ch}
+.lede{margin-top:20px;font-size:1.1rem;line-height:1.6;max-width:56ch}
+.body-p{margin-top:16px;color:var(--muted);max-width:56ch}
+.body-p a{color:var(--ink);text-decoration-color:var(--ball);text-decoration-thickness:2px;text-underline-offset:3px}
+
+.two{display:grid;grid-template-columns:1.25fr .9fr;gap:clamp(26px,4.5vw,56px);align-items:start}
+@media (max-width:860px){.two{grid-template-columns:1fr}}
+
+.panel{background:var(--card);border:2px solid var(--line);border-radius:var(--r);padding:26px}
+.panel h3{font-size:1.15rem;margin-bottom:16px}
+.balls{list-style:none;margin:0;padding:0;display:grid;gap:14px;font-size:.98rem}
+.balls li{display:grid;grid-template-columns:16px 1fr;gap:12px;align-items:start;color:var(--muted)}
+.balls li b{color:var(--ink)}
+.balls li::before{
+  content:"";width:14px;height:14px;border-radius:50%;margin-top:5px;
+  background:radial-gradient(circle at 33% 30%, #FFC28D, var(--ball));
+}
+
+/* ---------- tréninky ---------- */
+.days{display:flex;flex-wrap:wrap;gap:9px;margin-top:28px}
+.day{
+  font-family:var(--f-display);font-weight:700;font-size:.98rem;
+  padding:11px 18px;border-radius:999px;cursor:pointer;
+  background:var(--card);color:var(--muted);
+  border:2px solid var(--line);transition:.18s ease;
+}
+.day[data-on="1"]{color:var(--ink)}
+.day[data-on="1"]:hover{border-color:var(--ball);transform:translateY(-2px)}
+.day[aria-pressed="true"]{background:var(--ball);border-color:var(--ball);color:var(--btn-ink)}
+.day[data-on="0"]{opacity:.5;cursor:default}
+.slot-wrap{margin-top:22px;min-height:170px}
+.slots{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.slot{
+  background:var(--card);border:2px solid var(--line);border-left:7px solid var(--ball);
+  border-radius:14px;padding:18px 20px;animation:pop .3s ease both;
+}
+@keyframes pop{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.slot .t{font-family:var(--f-display);font-weight:800;font-size:1.32rem;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.slot .w{margin-top:5px;font-size:.94rem;color:var(--muted)}
+.empty{
+  background:var(--paper-2);border:2px dashed var(--line);border-radius:14px;
+  padding:22px;color:var(--muted);animation:pop .3s ease both;
+}
+.note{margin-top:20px;font-size:.88rem;color:var(--muted);max-width:60ch}
+
+/* ---------- docházka ---------- */
+.doch{margin-top:clamp(34px,5vw,52px);border-top:2px solid var(--line);padding-top:clamp(26px,4vw,38px)}
+.doch h3{font-size:clamp(1.3rem,2.6vw,1.7rem)}
+.doch-lead{margin-top:10px;color:var(--muted);max-width:56ch;font-size:.97rem}
+.tren-list{display:grid;gap:12px;margin-top:24px}
+.tren-list[hidden]{display:none}
+.tren{
+  background:var(--card);border:2px solid var(--line);
+  border-left:7px solid var(--ball);border-radius:14px;
+  padding:16px 18px;display:grid;gap:12px;
+  grid-template-columns:auto 1fr auto;align-items:center;
+}
+.tren-kdy{display:flex;flex-direction:column;gap:2px;min-width:96px}
+.tren-den{font-family:var(--f-display);font-weight:800;font-size:1.05rem;letter-spacing:-.01em}
+.tren-cas{font-size:.86rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.tren-komu{font-size:.92rem;color:var(--muted)}
+.tren.deti{border-left-color:var(--green);background:color-mix(in srgb, var(--green) 5%, var(--card))}
+.tren.deti .tren-komu{color:var(--green);font-weight:600}
+.slot.deti{border-left-color:var(--green);background:color-mix(in srgb, var(--green) 5%, var(--card))}
+.slot.deti .w{color:var(--green);font-weight:600}
+.legenda{display:flex;flex-wrap:wrap;gap:16px;margin-top:16px;font-size:.83rem;color:var(--muted)}
+.legenda span{display:inline-flex;align-items:center;gap:7px}
+.legenda i{width:14px;height:14px;border-radius:4px;display:inline-block}
+.tren-akce{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+.tren-pocet{font-size:.82rem;color:var(--muted);white-space:nowrap}
+.tren-pocet b{font-family:var(--f-display);font-weight:800;font-size:1.02rem;color:var(--ink)}
+.tren-btn{
+  cursor:pointer;border:2px solid var(--ink);background:transparent;color:var(--ink);
+  padding:9px 17px;border-radius:999px;font:inherit;font-weight:700;font-size:.9rem;
+  transition:.16s ease;white-space:nowrap;
+}
+.tren-btn:hover{background:var(--ink);color:var(--paper)}
+.tren-btn[aria-expanded="true"]{background:var(--ball);border-color:var(--ball);color:var(--btn-ink)}
+@media (max-width:640px){
+  .tren{grid-template-columns:1fr;gap:8px}
+  .tren-akce{justify-content:flex-start}
+}
+.tren-form{
+  grid-column:1/-1;display:none;gap:10px;flex-wrap:wrap;align-items:center;
+  border-top:1px dashed var(--line);padding-top:14px;
+}
+.tren.otevreno .tren-form{display:flex}
+.tren-form input[type=text]{
+  flex:1 1 170px;min-width:0;padding:10px 14px;border-radius:999px;
+  border:2px solid var(--line);background:var(--paper);color:var(--ink);font:inherit;font-size:.93rem;
+}
+.tren-form input[type=text]:focus{outline:none;border-color:var(--ball)}
+.role{display:flex;gap:6px}
+.role label{
+  cursor:pointer;padding:9px 15px;border-radius:999px;border:2px solid var(--line);
+  font-size:.88rem;font-weight:600;color:var(--muted);white-space:nowrap;
+}
+.role input{position:absolute;opacity:0;width:0;height:0}
+.role input:checked + span{color:var(--btn-ink)}
+.role label:has(input:checked){background:var(--ball);border-color:var(--ball);color:var(--btn-ink)}
+.role label:has(input:focus-visible){outline:3px solid var(--ball);outline-offset:2px}
+.tren-ok{font-size:.88rem;color:var(--green);font-weight:600}
+.zapsani{
+  grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;
+  border-top:1px solid var(--line);padding-top:12px;
+}
+.zapsani span{
+  font-size:.82rem;padding:4px 11px;border-radius:999px;
+  background:color-mix(in srgb, var(--ink) 6%, transparent);
+}
+.zapsani span.tr{background:color-mix(in srgb, var(--green) 18%, transparent);font-weight:600}
+.zpetne-prep{
+  margin-top:16px;cursor:pointer;border:0;background:transparent;padding:6px 0;
+  font:inherit;font-size:.88rem;font-weight:600;color:var(--muted);
+  text-decoration:underline;text-decoration-color:var(--ball);
+  text-decoration-thickness:2px;text-underline-offset:4px;
+}
+.zpetne-prep:hover{color:var(--ink)}
+.zpetne{margin-top:14px}
+.tren.minuly{background:transparent;border-style:dashed;opacity:.9}
+.tren.minuly .tren-den{color:var(--muted)}
+.znacka{
+  font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ball);white-space:nowrap;
+}
+.doch-pozn{margin-top:16px;font-size:.8rem;color:var(--muted);max-width:62ch}
+
+/* ---------- zápasy (zelený pás) ---------- */
+.matches{background:var(--green-deep);color:var(--on-dark);position:relative;overflow:hidden}
+.matches .eyebrow{color:#7FE3BE}
+.matches h2{color:var(--on-dark)}
+.matches .lede{color:#CFEFE2}
+.matches .body-p{color:#A9CFBE}
+.matches .body-p a{color:var(--on-dark);text-decoration-color:var(--ball)}
+.board{
+  background:rgba(0,0,0,.26);border:2px solid rgba(255,255,255,.16);
+  border-radius:var(--r);padding:24px;display:grid;gap:14px;
+}
+.board .row{display:flex;align-items:baseline;justify-content:space-between;gap:16px;font-size:.97rem;color:#CFEFE2}
+.board .row + .row{border-top:1px solid rgba(255,255,255,.14);padding-top:14px}
+.board .row b{font-family:var(--f-display);font-weight:800;font-size:1.24rem;color:var(--on-dark);font-variant-numeric:tabular-nums}
+
+/* ---------- video ---------- */
+.video-band{background:var(--paper-2)}
+.pod-videem{margin-top:clamp(28px,4vw,46px)}
+.vwrap{
+  position:relative;aspect-ratio:16/9;margin-top:30px;
+  border-radius:var(--r);overflow:hidden;background:#06281D;
+}
+#klip{display:block;width:100%;height:100%;object-fit:cover}
+
+/* klik kamkoliv do obrazu přepíná přehrávání */
+.v-plocha{
+  position:absolute;inset:0;z-index:1;
+  border:0;background:transparent;cursor:pointer;padding:0;
+}
+
+/* velká šipka, když stojí */
+.v-stred{
+  position:absolute;left:50%;top:50%;translate:-50% -50%;z-index:2;
+  width:clamp(58px,8vw,86px);aspect-ratio:1;border-radius:50%;
+  background:color-mix(in srgb, var(--ball) 92%, transparent);
+  display:grid;place-items:center;pointer-events:none;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+  opacity:0;scale:.85;transition:opacity .18s ease, scale .18s ease;
+}
+.vwrap.stoji .v-stred{opacity:1;scale:1}
+.v-stred svg{width:36%;fill:#2A1102;margin-left:9%}
+
+/* výzva k zapnutí zvuku */
+.v-zvuk{
+  position:absolute;left:14px;top:14px;z-index:3;cursor:pointer;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:9px 15px 9px 12px;border-radius:999px;border:0;
+  background:color-mix(in srgb, var(--ball) 94%, transparent);color:#2A1102;
+  font:inherit;font-size:.82rem;font-weight:700;
+  box-shadow:0 6px 18px rgba(0,0,0,.28);
+  transition:opacity .25s ease, translate .25s ease;
+}
+.v-zvuk svg{width:17px;height:17px;fill:currentColor}
+.v-zvuk[hidden]{display:none}
+.vwrap.se-zvukem .v-zvuk{opacity:0;translate:0 -8px;pointer-events:none;visibility:hidden}
+
+/* spodní lišta */
+.v-lista{
+  position:absolute;left:0;right:0;bottom:0;z-index:3;
+  display:flex;align-items:center;gap:10px;
+  padding:26px 14px 12px;
+  background:linear-gradient(transparent, rgba(3,20,14,.82));
+  opacity:0;translate:0 6px;transition:opacity .22s ease, translate .22s ease;
+}
+.vwrap:hover .v-lista,
+.vwrap.stoji .v-lista,
+.v-lista:focus-within{opacity:1;translate:0 0}
+@media (hover:none){ .v-lista{opacity:1;translate:0 0} }
+
+.v-btn{
+  flex:0 0 auto;display:grid;place-items:center;cursor:pointer;
+  width:34px;height:34px;padding:0;border:0;border-radius:50%;
+  background:transparent;color:#F2FBF7;
+}
+.v-btn:hover{background:rgba(255,255,255,.16)}
+.v-btn svg{width:18px;height:18px;fill:currentColor}
+.ik-pauza,.ik-zvuk{display:none}
+.vwrap.hraje-video .ik-hrat{display:none}
+.vwrap.hraje-video .ik-pauza{display:block}
+.vwrap.se-zvukem .ik-ticho{display:none}
+.vwrap.se-zvukem .ik-zvuk{display:block}
+
+.v-cas{
+  flex:0 0 auto;color:#D7ECE3;font-size:.78rem;font-weight:600;
+  font-variant-numeric:tabular-nums;letter-spacing:.01em;
+}
+@media (max-width:520px){ .v-cas{display:none} }
+
+.v-posun{
+  flex:1 1 auto;min-width:40px;height:20px;margin:0;cursor:pointer;
+  -webkit-appearance:none;appearance:none;background:transparent;
+}
+.v-posun::-webkit-slider-runnable-track{
+  height:5px;border-radius:99px;
+  background:linear-gradient(to right, var(--ball) var(--hotovo,0%), rgba(255,255,255,.32) 0);
+}
+.v-posun::-moz-range-track{height:5px;border-radius:99px;background:rgba(255,255,255,.32)}
+.v-posun::-moz-range-progress{height:5px;border-radius:99px;background:var(--ball)}
+.v-posun::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:13px;height:13px;border-radius:50%;
+  background:#fff;margin-top:-4px;box-shadow:0 1px 4px rgba(0,0,0,.4);
+}
+.v-posun::-moz-range-thumb{width:13px;height:13px;border:0;border-radius:50%;background:#fff}
+.v-posun:focus-visible{outline:2px solid var(--ball);outline-offset:3px;border-radius:99px}
+
+/* ---------- mini hra ---------- */
+.gwrap{position:relative;touch-action:none;border-radius:14px;overflow:hidden}
+#hra-canvas{display:block;width:100%;height:auto;cursor:crosshair}
+.gwrap.hraje #hra-canvas{cursor:none}
+.gover{
+  position:absolute;inset:0;display:grid;place-content:center;justify-items:center;
+  gap:12px;text-align:center;padding:20px;z-index:3;
+  background:color-mix(in srgb, var(--paper) 62%, transparent);
+  backdrop-filter:blur(3px);
+}
+.gpill{
+  position:absolute;top:10px;right:12px;z-index:2;display:flex;gap:16px;
+  font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);pointer-events:none;
+}
+.gpill b{font-family:var(--f-display);font-weight:800;font-size:1.05rem;color:var(--ink);font-variant-numeric:tabular-nums}
+.gpill .now{color:var(--ball)}
+.ghint{
+  position:absolute;left:50%;bottom:12px;transform:translateX(-50%);z-index:2;
+  padding:7px 15px;border-radius:999px;white-space:nowrap;pointer-events:none;
+  background:var(--ink);color:var(--paper);
+  font-size:.76rem;font-weight:600;
+  transition:opacity .3s ease;
+}
+.gwrap.hraje .ghint,
+.gwrap.hral .ghint{opacity:0}
+.gform{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.gform[hidden]{display:none}
+.gform input{
+  padding:11px 14px;border-radius:999px;border:2px solid var(--line);
+  background:var(--card);color:var(--ink);font:inherit;font-size:.95rem;
+  width:min(170px,42vw);
+}
+.gform input:focus{outline:none;border-color:var(--ball)}
+.gbtn-sm{padding:10px 18px;font-size:.92rem;box-shadow:0 6px 0 -2px var(--ball-dark)}
+
+.ladder-h{margin-top:20px;font-size:.7rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.ladder{list-style:none;margin:9px 0 0;padding:0;display:grid;gap:1px;font-size:.87rem}
+.ladder li{
+  display:grid;grid-template-columns:18px 1fr auto;gap:11px;align-items:center;
+  padding:6px 9px;border-radius:8px;
+}
+.ladder li.ladder-empty{display:block}
+.ladder li:nth-child(odd){background:color-mix(in srgb, var(--ink) 5%, transparent)}
+.ladder .cup{display:block;width:18px}
+.ladder .cup svg{display:block;width:18px;height:18px}
+.ladder .n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ladder .v{font-family:var(--f-display);font-weight:800;font-variant-numeric:tabular-nums}
+.ladder li.ja{background:color-mix(in srgb, var(--ball) 14%, transparent)}
+.ladder li.ja .v{color:var(--ball-dark)}
+.ladder-empty{color:var(--muted);font-size:.85rem;padding:5px 9px}
+.ladder-note{margin-top:7px;font-size:.74rem;color:var(--muted)}
+.gover[hidden]{display:none}
+.gover h3{font-size:clamp(1.25rem,2.6vw,1.8rem);max-width:18ch}
+.gover p{color:var(--muted);max-width:34ch;font-size:.98rem}
+.gbtn{
+  display:inline-flex;align-items:center;gap:9px;cursor:pointer;
+  padding:13px 26px;border-radius:999px;border:0;
+  font-family:var(--f-display);font-weight:700;font-size:1rem;
+  background:var(--ball);color:var(--btn-ink);
+  box-shadow:0 8px 0 -2px var(--ball-dark);
+  transition:transform .16s ease,box-shadow .16s ease;
+}
+.gbtn:hover{transform:translateY(-3px);box-shadow:0 11px 0 -2px var(--ball-dark)}
+.gover a{font-weight:600;color:var(--ink);text-decoration-color:var(--ball);text-decoration-thickness:2px;text-underline-offset:3px}
+
+
+
+/* ---------- soutěže ---------- */
+.teams{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));align-items:start;margin-top:34px}
+.team{
+  background:rgba(0,0,0,.24);border:2px solid rgba(255,255,255,.17);
+  border-radius:var(--r);padding:22px 22px 20px;
+  display:flex;flex-direction:column;gap:12px;
+}
+.team-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{
+  font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.16);color:var(--on-dark);
+}
+.chip-z{background:var(--ball);color:#2A1102}
+.team h3{font-size:1.34rem;color:var(--on-dark);letter-spacing:-.02em}
+.team .lvl{font-family:var(--f-display);font-weight:800;font-size:1.02rem;color:#7FE3BE}
+.team-sub{font-size:.9rem;color:#A9CFBE}
+.team details{margin-top:2px}
+.team summary{
+  cursor:pointer;font-weight:600;font-size:.92rem;color:#CFEFE2;
+  padding:9px 0;border-top:1px solid rgba(255,255,255,.15);list-style:none;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.team summary::-webkit-details-marker{display:none}
+.team summary::after{content:"+";font-family:var(--f-display);font-size:1.2rem;color:var(--ball)}
+.team details[open] summary::after{content:"−"}
+.roster{list-style:none;margin:2px 0 8px;padding:0;display:grid;gap:2px}
+.roster a{
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  padding:8px 10px;border-radius:9px;text-decoration:none;
+  color:#DCF3E9;font-size:.94rem;transition:background .15s ease;
+}
+.roster a:hover{background:rgba(255,255,255,.1);color:#fff}
+.roster .pct{font-weight:700;color:var(--ball);font-variant-numeric:tabular-nums;font-size:.9rem}
+.stis{
+  margin-top:auto;display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--f-display);font-weight:700;font-size:.95rem;
+  color:var(--on-dark);text-decoration:none;
+  border-top:1px solid rgba(255,255,255,.15);padding-top:14px;
+}
+.stis span{color:var(--ball);transition:transform .18s ease}
+.stis:hover span{transform:translateX(4px)}
+.matches .note{color:#A9CFBE}
+
+/* ---------- kalendář zápasů ---------- */
+.filtr{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.filtr button{
+  cursor:pointer;font:inherit;font-size:.86rem;font-weight:700;
+  padding:8px 15px;border-radius:999px;
+  background:rgba(255,255,255,.09);color:#CFEFE2;
+  border:2px solid rgba(255,255,255,.2);transition:.16s ease;
+}
+.filtr button:hover{border-color:var(--ball);color:#fff}
+.filtr button[aria-pressed="true"]{background:var(--ball);border-color:var(--ball);color:#2A1102}
+.kal{display:grid;gap:8px;margin-top:22px}
+.mesic{
+  margin-top:14px;font-size:.72rem;font-weight:700;letter-spacing:.15em;
+  text-transform:uppercase;color:#7FE3BE;
+}
+.mesic:first-child{margin-top:0}
+.zap{
+  display:grid;grid-template-columns:76px auto 1fr auto;gap:14px;align-items:center;
+  background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.14);
+  border-radius:12px;padding:12px 16px;
+}
+.zap-d{display:flex;flex-direction:column;line-height:1.15}
+.zap-den{font-family:var(--f-display);font-weight:800;font-size:1.05rem;color:var(--on-dark);white-space:nowrap}
+.zap-dow{font-size:.72rem;color:#8FBFAB;text-transform:lowercase}
+.zap-h{font-variant-numeric:tabular-nums;font-size:.86rem;color:#CFEFE2;white-space:nowrap}
+.zap-s{font-size:.97rem;color:var(--on-dark);min-width:0;overflow:hidden;text-overflow:ellipsis}
+.zap-s em{font-style:normal;color:#8FBFAB;font-size:.86rem}
+.zap-t{
+  font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  padding:4px 9px;border-radius:999px;white-space:nowrap;
+}
+.zap-v{
+  font-family:var(--f-display);font-weight:800;font-size:1.02rem;
+  font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--on-dark);
+}
+.zap-v.vyhra{color:#7FE3BE}
+.zap-v.prohra{color:#F0A08C}
+.zap-cek{font-size:.8rem;color:#7FA294;white-space:nowrap;font-style:italic}
+.t-doma{background:var(--ball);color:#2A1102}
+.t-venku{background:rgba(255,255,255,.14);color:#CFEFE2}
+@media (max-width:620px){
+  .zap{grid-template-columns:64px 1fr auto;gap:10px}
+  .zap-h{grid-column:2;font-size:.8rem}
+  .zap-s{grid-column:2;grid-row:2}
+  .zap-t{grid-column:3;grid-row:1}
+}
+.kal-vic{
+  margin-top:18px;cursor:pointer;border:0;background:transparent;padding:6px 0;
+  font:inherit;font-size:.88rem;font-weight:600;color:#CFEFE2;
+  text-decoration:underline;text-decoration-color:var(--ball);
+  text-decoration-thickness:2px;text-underline-offset:4px;
+}
+.kal-vic:hover{color:#fff}
+
+/* ---------- turnaje ---------- */
+.turnaje{margin-top:clamp(40px,6vw,64px);border-top:1px solid rgba(255,255,255,.18);padding-top:clamp(30px,4vw,44px)}
+.turnaje h3{font-size:clamp(1.3rem,2.6vw,1.75rem);color:var(--on-dark)}
+.turnaje .lede{margin-top:10px}
+.t-list{display:grid;gap:14px;margin-top:26px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.t-karta{
+  background:rgba(0,0,0,.24);border:2px solid rgba(255,255,255,.17);
+  border-radius:var(--r);padding:20px 22px;display:grid;gap:10px;align-content:start;
+}
+.t-hlav{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;justify-content:space-between}
+.t-nazev{font-family:var(--f-display);font-weight:800;font-size:1.18rem;color:var(--on-dark);letter-spacing:-.02em}
+.t-kdy{font-size:.82rem;color:#7FE3BE;white-space:nowrap;font-variant-numeric:tabular-nums}
+.t-kde{font-size:.88rem;color:#A9CFBE}
+.t-vysl{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:5px}
+.t-vysl li{
+  display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:baseline;
+  font-size:.94rem;color:#DCF3E9;padding:4px 0;
+}
+.t-vysl li + li{border-top:1px solid rgba(255,255,255,.1)}
+.t-poradi{font-family:var(--f-display);font-weight:800;color:var(--ball);font-variant-numeric:tabular-nums}
+.t-prazdno{
+  border:2px dashed rgba(255,255,255,.22);border-radius:var(--r);
+  padding:26px;color:#A9CFBE;font-size:.94rem;
+}
+
+/* ---------- nábor ---------- */
+.recruit{background:var(--ball);color:#2A1102;position:relative;overflow:hidden}
+.recruit .shell{padding-block:clamp(46px,7vw,84px);position:relative;z-index:2}
+.recruit .eyebrow{color:#7A2E00}
+.recruit h2{font-size:clamp(2rem,5vw,3.4rem);max-width:15ch;color:#2A1102}
+.recruit p{margin-top:20px;font-size:1.1rem;max-width:50ch;color:#4A2005}
+.recruit .btn-solid{background:#2A1102;color:#FFEBDA;box-shadow:0 8px 0 -2px rgba(0,0,0,.35)}
+.recruit .btn-line{border-color:#2A1102;color:#2A1102}
+.recruit .btn-line:hover{background:#2A1102;color:var(--ball)}
+.btn-plain{padding:14px 6px;color:#2A1102;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
+.btn-plain:hover{transform:translateY(-3px)}
+.recruit .deco{position:absolute;right:-24px;bottom:-46px;width:min(300px,34vw);pointer-events:none;z-index:1}
+@media (max-width:760px){.recruit .deco{display:none}}
+
+/* ---------- kontakt ---------- */
+.cgrid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));margin-top:32px}
+.ccard{background:var(--card);border:2px solid var(--line);border-radius:var(--r);padding:22px 24px}
+.ccard dt{font-size:.74rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+.ccard dd{margin:0;font-size:1.06rem;line-height:1.5;font-weight:500}
+.ccard a{text-decoration-color:var(--ball);text-decoration-thickness:2px;text-underline-offset:3px}
+.ccard a:hover{color:var(--ball)}
+
+footer{background:var(--ink);color:#C8B49C;font-size:.87rem}
+footer .shell{padding-block:34px 40px;display:grid;gap:14px}
+footer b{color:var(--paper)}
+footer .disclaim{border-top:1px solid rgba(255,246,234,.16);padding-top:16px;font-size:.82rem}
+
+.ph{border-bottom:2px dotted currentColor;opacity:.95;cursor:help}
+
+/* ---------- overlay CMS bloků ---------- */
+[data-block]{position:relative}
+body.blocks [data-block]{outline:2px dashed var(--rubber);outline-offset:-2px}
+body.blocks [data-block]::after{
+  content:attr(data-block);position:absolute;top:0;left:0;z-index:50;
+  background:var(--rubber);color:#fff;font-family:var(--f-body);font-weight:700;
+  font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:5px 10px;border-bottom-right-radius:8px;pointer-events:none;
+}
+</style>
+
+<div class="strip">
+  <div class="shell">
+    <span><b>Návrh webu.</b> Nejde o oficiální stránky klubu. Ověřená data z veřejných zdrojů, <span class="ph">tečkovaně</span> je ukázkově doplněno.</span>
+    <label class="toggle"><input type="checkbox" id="blocksToggle"> Zobrazit CMS bloky</label>
+  </div>
+</div>
+
+<header class="hero" data-block="hero">
+  <div class="shell">
+    <nav class="top">
+      <a class="wordmark" href="#"><span class="dot"></span> SKST Králův Dvůr</a>
+      <ul>
+        <li><a href="#klub">O klubu</a></li>
+        <li><a href="#treninky">Tréninky</a></li>
+        <li><a href="#soutez">Zápasy</a></li>
+        <li><a href="#kontakt">Kontakt</a></li>
+        <li><a href="https://claude.ai/code/artifact/7fc052fa-f3be-499f-b287-653c38f897a9" target="_blank" rel="noopener">Metodika ↗</a></li>
+      </ul>
+    </nav>
+
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Králův Dvůr · okres Beroun</p>
+        <h1>Přijďte si <span class="hl">plácnout</span> do míčku</h1>
+        <p class="lead">Hrajeme výkonnostní soutěže od regionu až po druhou ligu — a vedle toho si u nás bez ostychu zahraje každý, kdo má chuť.</p>
+        <div class="cta-row">
+          <a class="btn btn-solid" href="#nabor">Chci to zkusit</a>
+          <a class="btn btn-line" href="#treninky">Kdy se hraje</a>
+        </div>
+      </div>
+
+      <div class="scene" data-block="hra">
+        <div class="gwrap" id="gwrap">
+          <canvas id="hra-canvas" width="760" height="470"
+                  aria-label="Hra: odbíjení míčku přes pingpongový stůl"></canvas>
+          <div class="gpill"><span>Výměny <b class="now" id="sc-now" aria-live="polite">0</b></span><span>Nejlepší <b id="sc-best">0</b></span></div>
+          <div class="ghint" id="ghint">Klikněte a chopte se pálky</div>
+          <div class="gover" id="gover" hidden>
+            <h3 id="gover-t">Konec</h3>
+            <p id="gover-p"></p>
+            <form class="gform" id="gform" hidden>
+              <input id="gname" type="text" maxlength="18" placeholder="Vaše jméno"
+                     autocomplete="off" spellcheck="false" aria-label="Jméno do žebříčku">
+              <button class="gbtn gbtn-sm" type="submit">Zapsat</button>
+            </form>
+            <button class="gbtn" id="gbtn" type="button">Znovu</button>
+            <a id="gover-a" href="#nabor">Zkuste to radši doopravdy →</a>
+          </div>
+        </div>
+
+        <p class="ladder-h" id="ladder-h">Žebříček</p>
+        <ol class="ladder" id="ladder"></ol>
+        <p class="ladder-note" id="ladder-note"></p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="facts" data-block="fakta">
+  <div class="shell grid">
+    <div class="fcard">
+      <svg class="ic" viewBox="0 0 40 40" aria-hidden="true"><defs><radialGradient id="mic2" cx="0.34" cy="0.3" r="0.75"><stop offset="0" stop-color="#FFD3AC"/><stop offset="1" stop-color="#FF6B15"/></radialGradient></defs><circle cx="20" cy="20" r="15" fill="url(#mic2)"/><circle cx="20" cy="20" r="15" fill="none" stroke="#E05100" stroke-width="2"/><circle cx="15" cy="14" r="3.6" fill="#FFF" opacity=".65"/></svg>
+      <div class="val">36 členů</div>
+      <div class="lab">Registrovaných hráček a hráčů — od dětí po ligové hráče.</div>
+    </div>
+    <div class="fcard">
+      <svg class="ic" viewBox="0 0 40 40" aria-hidden="true"><path d="M13 12 L27 12 L35 27 L5 27 Z" fill="#0E7C5A"/><path d="M20 12 V27" stroke="#FFF6EA" stroke-width="1.6" opacity=".8"/><path d="M8 19.5 H32" stroke="#FFF6EA" stroke-width="2.4"/><path d="M8 27 v8 M32 27 v8" stroke="#0A5B42" stroke-width="3" stroke-linecap="round"/></svg>
+      <div class="val">Od regionu po 2. ligu</div>
+      <div class="lab">Družstva mužů i žen hrají krajské i ligové soutěže. Zápasy jsou veřejné.</div>
+    </div>
+    <div class="fcard">
+      <svg class="ic" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 4c-6.6 0-12 5.2-12 11.7C8 25 20 36 20 36s12-11 12-20.3C32 9.2 26.6 4 20 4z" fill="#FF6B15"/><circle cx="20" cy="16" r="4.6" fill="#FFF6EA"/></svg>
+      <div class="val">Jungmannova 292</div>
+      <div class="lab">Herna v Králově Dvoře, kousek od nádraží.</div>
+    </div>
+  </div>
+</section>
+
+<section class="sec video-band" id="klub" data-block="text">
+  <div class="shell">
+    <p class="eyebrow">O klubu</p>
+    <h2>Takhle to u nás v herně vypadá</h2>
+
+    <div class="vwrap" id="prehravac" data-block="video">
+      <video id="klip" playsinline muted loop autoplay preload="metadata"
+             aria-label="Záběry z tréninku SKST Králův Dvůr"></video>
+      <div id="klip-yt" hidden></div>
+
+      <button class="v-plocha" id="v-plocha" type="button" aria-label="Přehrát nebo pozastavit"></button>
+
+      <div class="v-stred" id="v-stred" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M6 3.5 L21 12 L6 20.5 Z"/></svg>
+      </div>
+
+      <button class="v-zvuk" id="v-zvuk" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h3.5L12 4.5v15L7.5 15H4z"/><path d="M16 8.5c1.4 1 1.4 6 0 7M19 6c2.8 2 2.8 10 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        Zapnout zvuk
+      </button>
+
+      <div class="v-lista" id="v-lista">
+        <button class="v-btn" id="v-hrat" type="button" aria-label="Přehrát">
+          <svg class="ik-hrat" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5 L19 12 L7 19.5 Z"/></svg>
+          <svg class="ik-pauza" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 4.5h4v15h-4z"/><path d="M13.5 4.5h4v15h-4z"/></svg>
+        </button>
+        <input class="v-posun" id="v-posun" type="range" min="0" max="1000" value="0" step="1" aria-label="Pozice ve videu">
+        <span class="v-cas" id="v-cas">0:00 / 0:20</span>
+        <button class="v-btn" id="v-ticho" type="button" aria-label="Zapnout zvuk">
+          <svg class="ik-ticho" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h3.5L12 4.5v15L7.5 15H4z"/><path d="M16 9l5 6M21 9l-5 6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+          <svg class="ik-zvuk" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h3.5L12 4.5v15L7.5 15H4z"/><path d="M16 8.5c1.4 1 1.4 6 0 7M19 6c2.8 2 2.8 10 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <button class="v-btn" id="v-cele" type="button" aria-label="Na celou obrazovku">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="two pod-videem">
+      <div>
+        <p class="lede">SKST Králův Dvůr je oddíl stolního tenisu s ligovou minulostí. Naše družstva hrají krajské i ligové soutěže, s mládeží pracujeme systematicky a chceme klub vrátit na úroveň, na které už jednou byl — a časem tu mít sportovní středisko mládeže.</p>
+        <p class="body-p">Zároveň u nás není zavřeno pro nikoho. Vedle soutěžních hráčů chodí do herny lidi, co si přišli po práci jen tak zahrát, a děti, které drží pálku poprvé. Jedni se dívají na druhé a nikdo tu nikoho nehoní.</p>
+        <p class="body-p">Fotky z turnajů a pozvánky přidáváme na <a href="https://www.facebook.com/profile.php?id=61558309397887">Facebook klubu</a>.</p>
+      </div>
+      <aside class="panel">
+        <h3>Kdo u nás hraje</h3>
+        <ul class="balls">
+          <li><span><b>Děti od chvíle, kdy udrží pálku</b> — a pak systematická příprava od základů</span></li>
+          <li><span><b>Soutěžní hráči a hráčky</b> — tréninky a zápasy družstev</span></li>
+          <li><span><b>Dospělí rekreačně</b> — přijďte si po práci zahrát</span></li>
+          <li><span><b>Vracející se</b> — hráli jste na základce? Ono se to vrátí.</span></li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="treninky" data-block="treninky">
+  <div class="shell">
+    <p class="eyebrow">Rozvrh</p>
+    <h2>Kdy můžete přijít?</h2>
+    <p class="body-p">Klikněte na den a uvidíte, jestli se hraje.</p>
+
+    <div class="days" id="days" role="group" aria-label="Výběr dne"></div>
+    <p class="legenda">
+      <span><i style="background:var(--green)"></i> Děti — tělocvična školy</span>
+      <span><i style="background:var(--ball)"></i> Mládež, starší mládež a dospělí</span>
+    </p>
+    <div class="slot-wrap"><div class="slots" id="slots"></div></div>
+
+    <div class="doch" data-block="dochazka">
+      <h3>Jdete na trénink? Zapište se.</h3>
+      <p class="doch-lead">Ať víme, kolik nás bude, a nemusíme docházku sepisovat ručně na papír.</p>
+      <div class="tren-list" id="tren-list"></div>
+
+      <button class="zpetne-prep" id="zpetne-prep" type="button" aria-expanded="false">
+        Zapomněli jste se zapsat? Doplnit zpětně
+      </button>
+      <div class="tren-list zpetne" id="tren-minule" hidden></div>
+
+      <p class="doch-pozn" id="doch-pozn"></p>
+    </div>
+
+  </div>
+</section>
+
+<section class="sec matches" id="soutez" data-block="soutez">
+  <div class="shell">
+    <p class="eyebrow">Soutěže a los</p>
+    <h2>Kde nás najdete v tabulkách</h2>
+    <p class="lede">Šest družstev v pěti soutěžích — od regionu po druhou ligu žen. Los na sezonu <b>2026/2027</b> je níž, tabulky a statistiky vede svazový systém STIS.</p>
+
+    <div class="teams" id="druzstva"></div>
+
+    <h3 style="margin-top:clamp(38px,5vw,56px);font-size:clamp(1.3rem,2.6vw,1.75rem);color:var(--on-dark)">Los utkání</h3>
+    <div class="filtr" id="filtr" role="group" aria-label="Filtr družstev"></div>
+    <div class="kal" id="kal"></div>
+    <button class="kal-vic" id="kal-vic" type="button">Zobrazit celou sezonu</button>
+    <p class="note" id="kal-pozn"></p>
+
+    <div class="turnaje" data-block="turnaje">
+      <h3>Turnaje</h3>
+      <p class="lede">Výsledky z turnajů, které nevede svazový systém — okresní přebory, memoriály, klubové akce.</p>
+      <div class="t-list" id="t-list"></div>
+      <p class="note" id="t-pozn"></p>
+    </div>
+  </div>
+</section>
+
+<section class="recruit" id="nabor" data-block="cta">
+  <svg class="deco" viewBox="0 0 280 300" aria-hidden="true">
+    <g fill="#2A1102" opacity=".17">
+      <g transform="translate(150,120) rotate(-24)">
+        <rect x="-15" y="76" width="30" height="104" rx="14"/>
+        <ellipse cx="0" cy="6" rx="80" ry="88"/>
+      </g>
+      <circle cx="40" cy="52" r="26"/>
+    </g>
+  </svg>
+  <div class="shell">
+    <p class="eyebrow">Přidejte se</p>
+    <h2>Máte chuť si zahrát? Přijďte mezi nás.</h2>
+    <p>Nemusíte nic umět a nemusíte nic slibovat. Stačí sportovní obuv do haly, pálku i míčky vám půjčíme. Ozvěte se, ať o vás víme a někdo se vám bude věnovat — nebo se prostě přijďte podívat na trénink.</p>
+    <div class="cta-row">
+      <a class="btn btn-solid" href="tel:+420607185894">607 185 894</a>
+      <a class="btn btn-line" href="mailto:vcelicka@tiscali.cz">Napsat e-mail</a>
+      <a class="btn btn-plain" href="#treninky">Kdy se hraje →</a>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="kontakt" data-block="kontakt">
+  <div class="shell">
+    <p class="eyebrow">Kde nás najdete</p>
+    <h2>Kontakt</h2>
+    <div class="cgrid">
+      <dl class="ccard"><dt>Herna</dt><dd>Jungmannova 292<br>267 01 Králův Dvůr</dd></dl>
+      <dl class="ccard"><dt>Telefon</dt><dd><a href="tel:+420607185894">607 185 894</a></dd></dl>
+      <dl class="ccard"><dt>E-mail</dt><dd><a href="mailto:vcelicka@tiscali.cz">vcelicka@tiscali.cz</a></dd></dl>
+      <dl class="ccard"><dt>Facebook</dt><dd><a href="https://www.facebook.com/profile.php?id=61558309397887">Stolní tenis — SKST Králův Dvůr</a></dd></dl>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="shell">
+    <div>
+      <b>Sportovní klub stolního tenisu Králův Dvůr, z.s.</b><br>
+      IČO 19933886 · Sídlo: Tovární 218, 267 01 Králův Dvůr<br>
+      Člen České unie sportu, okresní sdružení Beroun
+    </div>
+    <div class="disclaim">Tato stránka je návrh, ne oficiální web klubu. Kontaktní údaje pocházejí z veřejného rejstříku sportovních subjektů a z facebookové stránky klubu.</div>
+  </div>
+</footer>
+
+<script>
+// data, která by v ostré verzi přišla z Payloadu
+var ROZVRH = [
+  { den:"Pondělí", zkr:"Po", terminy:[
+      {od:"16:00",do:"17:00",komu:"Děti — v tělocvičně školy",typ:"deti"},
+      {od:"18:00",do:"20:00",komu:"Mládež, starší mládež a dospělí",typ:"dospeli"}] },
+  { den:"Úterý",   zkr:"Út", terminy:[
+      {od:"16:00",do:"17:00",komu:"Děti — v tělocvičně školy",typ:"deti"}] },
+  { den:"Středa",  zkr:"St", terminy:[
+      {od:"16:00",do:"17:00",komu:"Děti — v tělocvičně školy",typ:"deti"},
+      {od:"18:00",do:"20:00",komu:"Mládež, starší mládež a dospělí",typ:"dospeli"}] },
+  { den:"Čtvrtek", zkr:"Čt", terminy:[
+      {od:"16:00",do:"17:00",komu:"Děti — v tělocvičně školy",typ:"deti"}] },
+  { den:"Pátek",   zkr:"Pá", terminy:[
+      {od:"16:00",do:"17:00",komu:"Děti — v tělocvičně školy",typ:"deti"},
+      {od:"18:00",do:"20:00",komu:"Mládež, starší mládež a dospělí",typ:"dospeli"}] },
+  { den:"Sobota",  zkr:"So", terminy:[] },
+  { den:"Neděle",  zkr:"Ne", terminy:[] }
+];
+
+var daysEl = document.getElementById('days');
+var slotsEl = document.getElementById('slots');
+
+ROZVRH.forEach(function(d, i){
+  var b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'day';
+  b.textContent = d.zkr;
+  b.setAttribute('aria-label', d.den);
+  b.setAttribute('data-on', d.terminy.length ? '1' : '0');
+  b.setAttribute('aria-pressed', 'false');
+  if (d.terminy.length) b.addEventListener('click', function(){ vyber(i); });
+  daysEl.appendChild(b);
+});
+
+function vyber(i){
+  var tlacitka = daysEl.querySelectorAll('.day');
+  tlacitka.forEach(function(b, j){ b.setAttribute('aria-pressed', j === i ? 'true' : 'false'); });
+  var d = ROZVRH[i];
+  slotsEl.innerHTML = '';
+  if (!d.terminy.length){
+    var e = document.createElement('div');
+    e.className = 'empty';
+    e.textContent = d.den + ' se netrénuje. Zkuste pondělí, středu nebo pátek.';
+    slotsEl.appendChild(e);
+    return;
+  }
+  d.terminy.forEach(function(t){
+    var s = document.createElement('div');
+    s.className = 'slot';
+    s.classList.add(t.typ || 'dospeli');
+    var a = document.createElement('div'); a.className = 't'; a.textContent = t.od + '–' + t.do;
+    var b = document.createElement('div'); b.className = 'w'; b.textContent = t.komu;
+    s.appendChild(a); s.appendChild(b);
+    slotsEl.appendChild(s);
+  });
+}
+vyber(0);
+
+var ZAPASY = [{"t":"C","d":"2026-10-03","h":"17:00","s":"TJ Olešná D","D":1,"m":""},{"t":"A","d":"2026-10-03","h":"17:00","s":"Sokol Unhošť","D":1,"m":""},{"t":"B","d":"2026-10-03","h":"17:00","s":"TJ Chaloupky A","D":1,"m":""},{"t":"D","d":"2026-10-03","h":"17:00","s":"TJ Chaloupky B","D":1,"m":""},{"t":"B","d":"2026-10-10","h":"16:00","s":"TJ Lokomotiva Zdice C","D":1,"m":""},{"t":"C","d":"2026-10-10","h":"16:00","s":"TJ Olešná E","D":1,"m":""},{"t":"D","d":"2026-10-10","h":"16:00","s":"TJ Lokomotiva Zdice F","D":1,"m":""},{"t":"D","d":"2026-10-17","h":"10:00","s":"TJ Slovan Lochovice E","D":0,"m":"Lochovice 77, 26723 Lochovice"},{"t":"Queens","d":"2026-10-17","h":"10:00","s":"TJ Sokol Stodůlky","D":1,"m":""},{"t":"A","d":"2026-10-17","h":"13:30","s":"TTC Kladno C","D":0,"m":"Poděbradova 3214/3215, 272 01 Kladno"},{"t":"C","d":"2026-10-17","h":"17:00","s":"TJ Slovan Lochovice D","D":1,"m":""},{"t":"B","d":"2026-10-17","h":"17:00","s":"TJ Broumy","D":1,"m":""},{"t":"A","d":"2026-10-18","h":"13:00","s":"TJ Olešná B","D":0,"m":"Olešná 72 , 267 64"},{"t":"D","d":"2026-10-24","h":"13:00","s":"Sokol Hudlice D","D":0,"m":"Jungmannova 246,Hudlice 267 03"},{"t":"C","d":"2026-10-24","h":"16:00","s":"Sokol Karlštejn B","D":0,"m":"Karlštejn č.p. 106                      PSČ   267 18 Karlštejn"},{"t":"B","d":"2026-10-24","h":"16:00","s":"TJ Praskolesy","D":0,"m":"Sokolovna TJ Praskolesy"},{"t":"Queens","d":"2026-10-31","h":"10:00","s":"TJ AVIA Čakovice","D":1,"m":""},{"t":"D","d":"2026-10-31","h":"10:00","s":"T.J. Sokol Hořovice E","D":1,"m":""},{"t":"Queens","d":"2026-10-31","h":"15:00","s":"AC Sparta Praha C","D":1,"m":""},{"t":"C","d":"2026-10-31","h":"17:00","s":"T.J. Sokol Hořovice D","D":1,"m":""},{"t":"B","d":"2026-10-31","h":"17:00","s":"SK Nižbor","D":1,"m":""},{"t":"A","d":"2026-10-31","h":"17:00","s":"Sokol Rudná","D":1,"m":""},{"t":"A","d":"2026-11-01","h":"10:00","s":"KST Rakovník  B","D":1,"m":""},{"t":"Queens","d":"2026-11-14","h":"10:00","s":"TTC Kovářov","D":1,"m":""},{"t":"D","d":"2026-11-14","h":"10:00","s":"T.J. Sokol Žebrák C","D":0,"m":"ul. Sokolská 189, 26753 Žebrák"},{"t":"C","d":"2026-11-14","h":"13:00","s":"Sokol Hudlice C","D":0,"m":"Jungmannova 246,Hudlice 267 03"},{"t":"Queens","d":"2026-11-14","h":"15:00","s":"TJ Sokol České Budějovice","D":1,"m":""},{"t":"B","d":"2026-11-14","h":"16:00","s":"T.J. Sokol Žebrák A","D":0,"m":"ul. Sokolská 189, 26753 Žebrák"},{"t":"A","d":"2026-11-14","h":"17:00","s":"Sokol Černošice","D":1,"m":""},{"t":"A","d":"2026-11-15","h":"10:00","s":"SK Viktorie Ořech  B","D":1,"m":""},{"t":"C","d":"2026-11-21","h":"16:00","s":"TJ Srbsko A","D":1,"m":""},{"t":"D","d":"2026-11-21","h":"16:00","s":"TJ Srbsko B","D":1,"m":""},{"t":"B","d":"2026-11-21","h":"16:00","s":"Sokol Hudlice B","D":1,"m":""},{"t":"Queens","d":"2026-11-28","h":"09:30","s":"Slovan KST Bohnice","D":0,"m":"Areál TJ Slovan; ul. Na pískovně; 180 00 Praha8 - Bohnice"},{"t":"Queens","d":"2026-11-28","h":"13:30","s":"TJ Slavoj Praha","D":0,"m":"Rakovského 3136/1, tělocvična ZŠ - zadní trakt areálu školy"},{"t":"B","d":"2026-11-28","h":"16:00","s":"Sokol Karlštejn A","D":1,"m":""},{"t":"C","d":"2026-11-28","h":"16:00","s":"TJ Lokomotiva Zdice D","D":1,"m":""},{"t":"A","d":"2026-11-28","h":"17:00","s":"Sokol Krupá","D":0,"m":"Krupá 37, PSČ 270 09"},{"t":"A","d":"2026-11-29","h":"10:00","s":"Sokol Janov","D":0,"m":"Janov 81"},{"t":"C","d":"2026-12-05","h":"13:00","s":"TJ Lokomotiva Zdice E","D":0,"m":"Herna pro regionální soutěže, Sportovní hala města Zdice, Komenského 304, Zdice 26751"},{"t":"Queens","d":"2026-12-12","h":"10:00","s":"TJ Sokol Bor  SVKI","D":1,"m":""},{"t":"Queens","d":"2026-12-12","h":"15:00","s":"TJ Sokol Plzeň V","D":1,"m":""},{"t":"B","d":"2026-12-12","h":"17:00","s":"T.J. Sokol Žebrák B","D":1,"m":""},{"t":"A","d":"2026-12-12","h":"17:00","s":"Sokol Stochov-Honice","D":1,"m":""},{"t":"A","d":"2026-12-13","h":"10:00","s":"Sokol Hudlice","D":1,"m":""},{"t":"B","d":"2026-12-19","h":"16:00","s":"TJ Olešná C","D":0,"m":"Hostinec U zeleného stromu, Olešná 72"},{"t":"Queens","d":"2027-01-09","h":"10:00","s":"TJ Sokol Stodůlky","D":0,"m":"K Vidouli 710, 155 00, Praha 5 - Stodůlky"},{"t":"C","d":"2027-01-09","h":"13:00","s":"TJ Olešná D","D":0,"m":"Hostinec U zeleného stromu, Olešná 72"},{"t":"B","d":"2027-01-09","h":"13:00","s":"TJ Chaloupky A","D":0,"m":"Chaloupky 11, 26762 Komárov u Hořovic"},{"t":"D","d":"2027-01-09","h":"16:00","s":"TJ Chaloupky B","D":0,"m":"Chaloupky 11, 26762 Komárov u Hořovic"},{"t":"A","d":"2027-01-09","h":"17:00","s":"TTC Kladno C","D":1,"m":""},{"t":"A","d":"2027-01-10","h":"10:00","s":"TJ Olešná B","D":1,"m":""},{"t":"D","d":"2027-01-16","h":"13:00","s":"TJ Lokomotiva Zdice F","D":0,"m":"Herna pro regionální soutěže, Sportovní hala města Zdice, Komenského 304, Zdice 26751"},{"t":"C","d":"2027-01-16","h":"13:00","s":"TJ Olešná E","D":0,"m":"Hostinec U zeleného stromu, Olešná 72"},{"t":"B","d":"2027-01-16","h":"16:00","s":"TJ Lokomotiva Zdice C","D":0,"m":"Herna pro regionální soutěže, Sportovní hala města Zdice, Komenského 304, Zdice 26751"},{"t":"Queens","d":"2027-01-23","h":"09:30","s":"TJ AVIA Čakovice","D":0,"m":"Jizerská 328/4 Praha Čakovice"},{"t":"C","d":"2027-01-23","h":"10:00","s":"TJ Slovan Lochovice D","D":0,"m":"Lochovice 77, 26723 Lochovice"},{"t":"Queens","d":"2027-01-23","h":"13:30","s":"AC Sparta Praha C","D":0,"m":"Kovanecká 27, 190 00 Praha 9 - Libeň"},{"t":"D","d":"2027-01-23","h":"16:00","s":"TJ Slovan Lochovice E","D":1,"m":""},{"t":"B","d":"2027-01-23","h":"16:00","s":"TJ Broumy","D":0,"m":"Školní ulice Broumy"},{"t":"A","d":"2027-01-23","h":"17:00","s":"Sokol Rudná","D":0,"m":"Masarykova 16 , 25219 Rudná"},{"t":"A","d":"2027-01-24","h":"13:00","s":"KST Rakovník  B","D":0,"m":"Tyršova 733, Rakovník"},{"t":"B","d":"2027-01-30","h":"16:00","s":"TJ Praskolesy","D":1,"m":""},{"t":"C","d":"2027-01-30","h":"16:00","s":"Sokol Karlštejn B","D":1,"m":""},{"t":"D","d":"2027-01-30","h":"16:00","s":"Sokol Hudlice D","D":1,"m":""},{"t":"D","d":"2027-02-06","h":"10:00","s":"T.J. Sokol Hořovice E","D":0,"m":"Tyršova 401/3,Hořovice 26801"},{"t":"Queens","d":"2027-02-06","h":"10:00","s":"TTC Kovářov","D":0,"m":"Kovářov 80"},{"t":"C","d":"2027-02-06","h":"13:00","s":"T.J. Sokol Hořovice D","D":0,"m":"Tyršova 401/3,Hořovice 26801"},{"t":"A","d":"2027-02-06","h":"13:30","s":"Sokol Černošice","D":0,"m":"Tělocvična SK Viktorie Ořech, Zbuzanská 180, 25225 Ořech"},{"t":"Queens","d":"2027-02-06","h":"15:00","s":"TJ Sokol České Budějovice","D":0,"m":""},{"t":"B","d":"2027-02-06","h":"16:00","s":"SK Nižbor","D":0,"m":"Sokolovna Nižbor, Strádonická 234, 26705 Nižbor"},{"t":"A","d":"2027-02-07","h":"16:00","s":"SK Viktorie Ořech  B","D":0,"m":"Tělocvična SK Viktorie Ořech, Zbuzanská 180, 25225 Ořech"},{"t":"Queens","d":"2027-02-20","h":"10:00","s":"Slovan KST Bohnice","D":1,"m":""},{"t":"Queens","d":"2027-02-20","h":"15:00","s":"TJ Slavoj Praha","D":1,"m":""},{"t":"C","d":"2027-02-20","h":"17:00","s":"Sokol Hudlice C","D":1,"m":""},{"t":"D","d":"2027-02-20","h":"17:00","s":"T.J. Sokol Žebrák C","D":1,"m":""},{"t":"A","d":"2027-02-20","h":"17:00","s":"Sokol Krupá","D":1,"m":""},{"t":"B","d":"2027-02-20","h":"17:00","s":"T.J. Sokol Žebrák A","D":1,"m":""},{"t":"A","d":"2027-02-21","h":"10:00","s":"Sokol Janov","D":1,"m":""},{"t":"D","d":"2027-02-27","h":"13:00","s":"TJ Srbsko B","D":0,"m":"Za Vodou 206,Srbsko"},{"t":"C","d":"2027-02-27","h":"16:00","s":"TJ Srbsko A","D":0,"m":"Za Vodou 206,Srbsko"},{"t":"B","d":"2027-02-27","h":"16:00","s":"Sokol Hudlice B","D":0,"m":"Jungmannova 246,Hudlice 267 03"},{"t":"Queens","d":"2027-03-06","h":"09:00","s":"TJ Sokol Bor  SVKI","D":0,"m":"Bor, Plzeňská ulice 263"},{"t":"Queens","d":"2027-03-06","h":"13:30","s":"TJ Sokol Plzeň V","D":0,"m":"Plzeň, Klášterní 2"},{"t":"C","d":"2027-03-06","h":"16:00","s":"TJ Lokomotiva Zdice D","D":0,"m":"Herna pro regionální soutěže, Sportovní hala města Zdice, Komenského 304, Zdice 26751"},{"t":"B","d":"2027-03-06","h":"16:00","s":"Sokol Karlštejn A","D":0,"m":"Karlštejn č.p. 106                      PSČ   267 18 Karlštejn"},{"t":"A","d":"2027-03-06","h":"17:00","s":"Sokol Stochov-Honice","D":0,"m":"Družstevní 90, 273 03 Stochov - Honice"},{"t":"A","d":"2027-03-07","h":"10:00","s":"Sokol Hudlice","D":0,"m":"Sokolovna TJ Sokol Hudlice, Jungmannova 246,267 03"},{"t":"C","d":"2027-03-13","h":"16:00","s":"TJ Lokomotiva Zdice E","D":1,"m":""},{"t":"A","d":"2027-03-13","h":"17:00","s":"Sokol Unhošť","D":0,"m":"Sokolovna Unhošť, Melicharova 60"},{"t":"B","d":"2027-03-20","h":"13:00","s":"T.J. Sokol Žebrák B","D":0,"m":"ul. Sokolská 189, 26753 Žebrák"},{"t":"B","d":"2027-03-27","h":"16:00","s":"TJ Olešná C","D":1,"m":""}];
+// Výsledky sem doplní klub v administraci: klíč je id zápasu,
+// hodnota [skóre domácích, skóre hostů]. Prázdné = zatím se nehrálo.
+var VYSLEDKY = {};
+var DRUZSTVA = [{"k":"Queens","kat":"Ženy","sout":"2. liga","plny":"SKST Králův Dvůr Queens","stis":"https://stis.ping-pong.cz/druzstvo-65164/svaz-420000/rocnik-2026/soutez-6570"},{"k":"BQueens","kat":"Ženy","sout":"Divize","plny":"SKST Králův Dvůr B Queens","stis":"https://stis.ping-pong.cz/druzstvo-64892/svaz-420103/rocnik-2026/soutez-6492"},{"k":"A","kat":"Muži","sout":"Krajská soutěž 2. třídy","plny":"SKST Králův Dvůr","stis":"https://stis.ping-pong.cz/druzstvo-64893/svaz-420103/rocnik-2026/soutez-6490"},{"k":"B","kat":"Muži","sout":"Regionální soutěž I.","plny":"SKST Králův Dvůr B","stis":"https://stis.ping-pong.cz/druzstvo-65351/svaz-420202/rocnik-2026/soutez-6514"},{"k":"C","kat":"Muži","sout":"Regionální soutěž II.","plny":"SKST Králův Dvůr C","stis":"https://stis.ping-pong.cz/druzstvo-67966/svaz-420202/rocnik-2026/soutez-6515"},{"k":"D","kat":"Muži","sout":"Regionální soutěž III.","plny":"SKST Králův Dvůr D","stis":"https://stis.ping-pong.cz/druzstvo-65352/svaz-420202/rocnik-2026/soutez-6516"}];
+
+// ================= DRUŽSTVA A LOS =================
+// Data pochází z oficiálního CSV exportu kalendáře utkání ze STIS,
+// takže se nikde nic nescrapuje. Nový export = nová data.
+(function(){
+  var wrapD = document.getElementById('druzstva');
+  var wrapF = document.getElementById('filtr');
+  var wrapK = document.getElementById('kal');
+  var vic = document.getElementById('kal-vic');
+  var pozn = document.getElementById('kal-pozn');
+  if (!wrapK) return;
+
+  var STIS_ODDIL = 'https://stis.ping-pong.cz/oddil-420202028/svaz-420202/rocnik-2026/soutez-6515';
+  var DOW = ['ne','po','út','st','čt','pá','so'];
+  var MES = ['leden','únor','březen','duben','květen','červen',
+             'červenec','srpen','září','říjen','listopad','prosinec'];
+  var vybrane = 'vse', vseZobrazeno = false;
+
+  // ---- kartičky družstev ----
+  DRUZSTVA.forEach(function(d){
+    var pocet = ZAPASY.filter(function(z){ return z.t === d.k; }).length;
+    var el = document.createElement('article');
+    el.className = 'team';
+    el.innerHTML =
+      '<div class="team-top"><span class="chip"></span><span class="lvl"></span></div>' +
+      '<h3></h3><p class="team-sub"></p>' +
+      '<a class="stis" target="_blank" rel="noopener">Tabulka a výsledky <span>→</span></a>';
+    var chip = el.querySelector('.chip');
+    chip.textContent = d.kat;
+    if (d.kat === 'Ženy') chip.className = 'chip chip-z';
+    el.querySelector('.lvl').textContent = d.sout;
+    el.querySelector('h3').textContent = d.plny.replace('SKST Králův Dvůr', 'SKST KD');
+    el.querySelector('.team-sub').textContent = pocet ? (pocet + ' utkání v sezoně') : 'los zatím není v exportu';
+    el.querySelector('.stis').href = d.stis || STIS_ODDIL;
+    wrapD.appendChild(el);
+  });
+
+  // ---- filtr ----
+  var volby = [{ k:'vse', p:'Všechna družstva' }].concat(
+    DRUZSTVA.filter(function(d){ return ZAPASY.some(function(z){ return z.t === d.k; }); })
+            .map(function(d){ return { k:d.k, p:d.plny.replace('SKST Králův Dvůr','SKST KD') }; })
+  );
+  volby.forEach(function(v){
+    var b = document.createElement('button');
+    b.type = 'button'; b.textContent = v.p;
+    b.setAttribute('aria-pressed', v.k === 'vse' ? 'true' : 'false');
+    b.addEventListener('click', function(){
+      vybrane = v.k;
+      wrapF.querySelectorAll('button').forEach(function(x, i){
+        x.setAttribute('aria-pressed', volby[i].k === vybrane ? 'true' : 'false');
+      });
+      vykresli();
+    });
+    wrapF.appendChild(b);
+  });
+
+  function vykresli(){
+    var dnes = new Date(); dnes.setHours(0,0,0,0);
+    var vse = ZAPASY.filter(function(z){ return vybrane === 'vse' || z.t === vybrane; });
+    var budouci = vse.filter(function(z){ return new Date(z.d + 'T23:59') >= dnes; });
+    var zdroj = vseZobrazeno ? vse : budouci.slice(0, 8);
+
+    wrapK.innerHTML = '';
+    var poslMesic = '';
+    zdroj.forEach(function(z){
+      var dt = new Date(z.d + 'T' + z.h);
+      var mk = MES[dt.getMonth()] + ' ' + dt.getFullYear();
+      if (mk !== poslMesic){
+        poslMesic = mk;
+        var h = document.createElement('p');
+        h.className = 'mesic'; h.textContent = mk;
+        wrapK.appendChild(h);
+      }
+      var el = document.createElement('div');
+      el.className = 'zap';
+      el.innerHTML =
+        '<div class="zap-d"><span class="zap-den"></span><span class="zap-dow"></span></div>' +
+        '<span class="zap-h"></span>' +
+        '<span class="zap-s"></span>' +
+        '<span class="zap-t"></span>';
+      el.querySelector('.zap-den').textContent = dt.getDate() + '. ' + (dt.getMonth()+1) + '.';
+      el.querySelector('.zap-dow').textContent = DOW[dt.getDay()];
+      var id = z.d + '_' + z.h.replace(':','') + '_' + z.t;
+      var v = VYSLEDKY[id];
+      var odehrano = new Date(z.d + 'T' + z.h) < new Date();
+      var bunka = el.querySelector('.zap-h');
+      if (v && v.length === 2){
+        var nase = z.D ? v[0] : v[1], jejich = z.D ? v[1] : v[0];
+        bunka.className = 'zap-v ' + (nase > jejich ? 'vyhra' : (nase < jejich ? 'prohra' : ''));
+        bunka.textContent = nase + ':' + jejich;
+      } else if (odehrano){
+        bunka.className = 'zap-cek';
+        bunka.textContent = 'čeká na výsledek';
+      } else {
+        bunka.textContent = z.h;
+      }
+      var s = el.querySelector('.zap-s');
+      s.textContent = z.s;
+      if (vybrane === 'vse'){
+        var em = document.createElement('em');
+        em.textContent = '  · ' + z.t;
+        s.appendChild(em);
+      }
+      var t = el.querySelector('.zap-t');
+      t.textContent = z.D ? 'doma' : 'venku';
+      t.className = 'zap-t ' + (z.D ? 't-doma' : 't-venku');
+      if (!z.D && z.m) el.title = z.m;
+      wrapK.appendChild(el);
+    });
+
+    if (!zdroj.length){
+      var p = document.createElement('p');
+      p.className = 'team-sub'; p.textContent = 'Pro tenhle výběr nemáme v losu žádné utkání.';
+      wrapK.appendChild(p);
+    }
+    vic.textContent = vseZobrazeno ? 'Zobrazit jen nejbližší' : ('Zobrazit celou sezonu (' + vse.length + ' utkání)');
+    vic.hidden = vse.length <= 8;
+    var sVysledkem = Object.keys(VYSLEDKY).length;
+    pozn.textContent = 'Los pochází z oficiálního CSV exportu ze STIS — ten obsahuje termíny, ne skóre. '
+      + (sVysledkem ? 'Výsledky doplňuje klub v administraci.'
+                    : 'Jakmile se začne hrát, doplní se sem i výsledky; vyhraná utkání zeleně, prohraná červeně.');
+  }
+
+  vic.addEventListener('click', function(){ vseZobrazeno = !vseZobrazeno; vykresli(); });
+  vykresli();
+})();
+
+// ================= TURNAJE =================
+// Tyhle výsledky nepocházejí ze STISu — vkládá je ručně správce v administraci.
+(function(){
+  var list = document.getElementById('t-list');
+  var pozn = document.getElementById('t-pozn');
+  if (!list) return;
+
+  var MES = ['ledna','února','března','dubna','května','června',
+             'července','srpna','září','října','listopadu','prosince'];
+  var turnaje = [];
+
+  function datumCesky(iso){
+    var d = new Date(iso + 'T12:00');
+    if (isNaN(d)) return iso;
+    return d.getDate() + '. ' + MES[d.getMonth()] + ' ' + d.getFullYear();
+  }
+
+  function vykresli(){
+    list.innerHTML = '';
+    if (!turnaje.length){
+      var p = document.createElement('div');
+      p.className = 't-prazdno';
+      p.textContent = 'Zatím tu žádný turnaj není. Správce klubu je přidává v administraci — název, datum, místo a pořadí hráčů.';
+      list.appendChild(p);
+      pozn.textContent = '';
+      return;
+    }
+    turnaje.forEach(function(t){
+      var el = document.createElement('article');
+      el.className = 't-karta';
+      var h = document.createElement('div');
+      h.className = 't-hlav';
+      var n = document.createElement('span'); n.className = 't-nazev'; n.textContent = t.nazev;
+      var k = document.createElement('span'); k.className = 't-kdy'; k.textContent = datumCesky(t.datum);
+      h.appendChild(n); h.appendChild(k);
+      el.appendChild(h);
+      if (t.misto){
+        var m = document.createElement('p'); m.className = 't-kde'; m.textContent = t.misto;
+        el.appendChild(m);
+      }
+      if (t.vysledky && t.vysledky.length){
+        var ul = document.createElement('ul');
+        ul.className = 't-vysl';
+        t.vysledky.forEach(function(v, i){
+          var li = document.createElement('li');
+          var p1 = document.createElement('span'); p1.className = 't-poradi';
+          p1.textContent = (v.poradi || (i + 1)) + '.';
+          var p2 = document.createElement('span');
+          p2.textContent = v.jmeno + (v.poznamka ? ' — ' + v.poznamka : '');
+          li.appendChild(p1); li.appendChild(p2);
+          ul.appendChild(li);
+        });
+        el.appendChild(ul);
+      }
+      list.appendChild(el);
+    });
+    pozn.textContent = 'Turnajové výsledky vkládá správce klubu ručně — STIS je nevede.';
+  }
+
+  vykresli();
+
+  // obsah, který spravuje klub: data/obsah.json
+  fetch('data/obsah.json').then(function(r){ return r.json(); }).then(function(o){
+    turnaje = (o && o.turnaje) || [];
+    vykresli();
+  }).catch(function(){});
+})();
+
+// ================= DOCHÁZKA NA TRÉNINKY =================
+// Týdenní rozvrh říká, KDY se trénuje. Zápis ale potřebuje KONKRÉTNÍ DATUM,
+// proto si z rozvrhu dopočítáme skutečné termíny — dopředu i pár dní zpátky,
+// aby se mohl doplnit i ten, kdo se zapomněl zapsat.
+(function(){
+  var list = document.getElementById('tren-list');
+  var listMinule = document.getElementById('tren-minule');
+  var prep = document.getElementById('zpetne-prep');
+  var pozn = document.getElementById('doch-pozn');
+  if (!list) return;
+
+  var ZKR = ['po','út','st','čt','pá','so','ne'];
+  var DEN_MS = 86400000;
+  var ZPET_DNU = 14;
+
+  function iso(d){
+    return d.getFullYear() + '-' + ('0'+(d.getMonth()+1)).slice(-2) + '-' + ('0'+d.getDate()).slice(-2);
+  }
+  function polnoc(){ var n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
+
+  // posun: kolik dní od dneška; kladné dopředu, záporné zpět
+  function terminyDne(posun){
+    var den = new Date(polnoc().getTime() + posun * DEN_MS);
+    var idx = (den.getDay() + 6) % 7;
+    return ROZVRH[idx].terminy.map(function(tr){
+      return {
+        id: iso(den) + '_' + tr.od.replace(':',''),
+        datum: iso(den),
+        popis: ZKR[idx] + ' ' + den.getDate() + '. ' + (den.getMonth()+1) + '.',
+        od: tr.od, doo: tr['do'], komu: tr.komu, typ: tr.typ || 'dospeli',
+        konec: parseInt(tr['do'].split(':')[0],10) * 60 + parseInt(tr['do'].split(':')[1],10)
+      };
+    });
+  }
+  function ted(){ var n = new Date(); return n.getHours()*60 + n.getMinutes(); }
+
+  function nadchazejici(kolik){
+    var ven = [];
+    for (var d = 0; d < 21 && ven.length < kolik; d++){
+      terminyDne(d).forEach(function(t){
+        if (ven.length >= kolik) return;
+        if (d === 0 && t.konec <= ted()) return;
+        ven.push(t);
+      });
+    }
+    return ven;
+  }
+  function minule(){
+    var ven = [];
+    for (var d = 0; d >= -ZPET_DNU; d--){
+      terminyDne(d).forEach(function(t){
+        if (d === 0 && t.konec > ted()) return;    // dnešní ještě neproběhlé sem nepatří
+        ven.push(t);
+      });
+    }
+    return ven;   // od nejnovějšího po nejstarší
+  }
+
+  var terminy = nadchazejici(6);
+  var stare = minule();
+  var zapisy = {};
+  var dbKol = null;   // ponecháno kvůli kompatibilitě
+
+  function jmenoZPameti(){
+    try { return localStorage.getItem('skst-dochazka-jmeno') || ''; } catch (e) { return ''; }
+  }
+
+  function kartaTerminu(t, zpetne){
+    var lidi = zapisy[t.id] || [];
+    var el = document.createElement('div');
+    el.className = 'tren ' + t.typ + (zpetne ? ' minuly' : '');
+
+    var kdy = document.createElement('div');
+    kdy.className = 'tren-kdy';
+    kdy.innerHTML = '<span class="tren-den"></span><span class="tren-cas"></span>';
+    kdy.querySelector('.tren-den').textContent = t.popis;
+    kdy.querySelector('.tren-cas').textContent = t.od + '–' + t.doo;
+
+    var komu = document.createElement('div');
+    komu.className = 'tren-komu';
+    komu.textContent = t.komu;
+
+    var akce = document.createElement('div');
+    akce.className = 'tren-akce';
+    if (zpetne){
+      var zn = document.createElement('span');
+      zn.className = 'znacka'; zn.textContent = 'zpětně';
+      akce.appendChild(zn);
+    }
+    var pocet = document.createElement('span');
+    pocet.className = 'tren-pocet';
+    pocet.innerHTML = 'zapsáno <b></b>';
+    pocet.querySelector('b').textContent = lidi.length;
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'tren-btn';
+    btn.textContent = zpetne ? 'Doplnit se' : 'Zapsat se';
+    btn.setAttribute('aria-expanded', 'false');
+    akce.appendChild(pocet); akce.appendChild(btn);
+
+    var form = document.createElement('form');
+    form.className = 'tren-form';
+    form.innerHTML =
+      '<input type="text" maxlength="30" placeholder="Jméno a příjmení" autocomplete="name" required aria-label="Jméno">' +
+      '<div class="role">' +
+        '<label><input type="radio" name="role-' + t.id + '" value="Hráč" checked><span>Hráč</span></label>' +
+        '<label><input type="radio" name="role-' + t.id + '" value="Trenér"><span>Trenér</span></label>' +
+      '</div>' +
+      '<button class="gbtn gbtn-sm" type="submit">' + (zpetne ? 'Doplnit' : 'Potvrdit') + '</button>';
+    form.querySelector('input[type=text]').value = jmenoZPameti();
+
+    btn.addEventListener('click', function(){
+      var otev = el.classList.toggle('otevreno');
+      btn.setAttribute('aria-expanded', otev ? 'true' : 'false');
+      btn.textContent = otev ? 'Zavřít' : (zpetne ? 'Doplnit se' : 'Zapsat se');
+      if (otev) form.querySelector('input[type=text]').focus();
+    });
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var jm = form.querySelector('input[type=text]').value.replace(/\s+/g,' ').trim().slice(0,30);
+      if (!jm) return;
+      var role = form.querySelector('input[name="role-' + t.id + '"]:checked').value;
+      try { localStorage.setItem('skst-dochazka-jmeno', jm); } catch (err) {}
+      zapis(t, jm, role, zpetne);
+      el.classList.remove('otevreno');
+      btn.setAttribute('aria-expanded','false');
+      btn.textContent = zpetne ? 'Doplnit se' : 'Zapsat se';
+    });
+
+    el.appendChild(kdy); el.appendChild(komu); el.appendChild(akce); el.appendChild(form);
+
+    if (lidi.length){
+      var seznam = document.createElement('div');
+      seznam.className = 'zapsani';
+      lidi.forEach(function(o){
+        var sp = document.createElement('span');
+        if (o.role === 'Trenér') sp.className = 'tr';
+        sp.textContent = o.jmeno + (o.role === 'Trenér' ? ' · trenér' : '') + (o.zpetne ? ' · zpětně' : '');
+        seznam.appendChild(sp);
+      });
+      el.appendChild(seznam);
+    }
+    return el;
+  }
+
+  function vykresli(){
+    list.innerHTML = '';
+    terminy.forEach(function(t){ list.appendChild(kartaTerminu(t, false)); });
+    listMinule.innerHTML = '';
+    stare.forEach(function(t){ listMinule.appendChild(kartaTerminu(t, true)); });
+  }
+
+  function zapis(t, jmeno, role, zpetne){
+    var zaznam = { trenink: t.id, datum: t.datum, cas: t.od + '–' + t.doo,
+                   skupina: t.komu, jmeno: jmeno, role: role,
+                   zpetne: !!zpetne, kdy: new Date().toISOString() };
+    // optimisticky ukážeme hned, ať to nečeká na síť
+    zapisy[t.id] = (zapisy[t.id] || []).filter(function(o){ return o.jmeno !== jmeno; });
+    zapisy[t.id].push({ jmeno: jmeno, role: role, zpetne: !!zpetne });
+    vykresli();
+
+    fetch(NASTAVENI.dochazkaApi, {
+      method: 'POST',
+      body: JSON.stringify(zaznam)      // bez hlaviček — viz poznámka v api/dochazka.js
+    }).then(function(r){ return r.json(); })
+      .then(function(o){ if (!o || !o.ok) console.warn('Zápis se neuložil:', o); })
+      .catch(function(e){ console.warn('Zápis se neodeslal:', e); });
+  }
+
+  prep.addEventListener('click', function(){
+    var otev = listMinule.hidden;
+    listMinule.hidden = !otev;
+    prep.setAttribute('aria-expanded', otev ? 'true' : 'false');
+    prep.textContent = otev ? 'Skrýt proběhlé tréninky'
+                            : 'Zapomněli jste se zapsat? Doplnit zpětně';
+  });
+
+  vykresli();
+  pozn.textContent = 'Zápisy se ukládají do klubové tabulky — pro každé datum vzniká nový list.';
+
+})();
+
+if (window.NASTAVENI && NASTAVENI.navrh === false){
+  var pruh = document.querySelector('.strip');
+  if (pruh) pruh.remove();
+  document.querySelectorAll('.ph').forEach(function(e){ e.classList.remove('ph'); });
+}
+
+document.getElementById('blocksToggle') && document.getElementById('blocksToggle').addEventListener('change', function(e){
+  document.body.classList.toggle('blocks', e.target.checked);
+});
+
+// Odkazy na kotvy: v izolovaném rámu (náhled artefaktu) samotné href="#..."
+// neposkočí, takže rolování řešíme sami.
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click', function(e){
+    var id = a.getAttribute('href').slice(1);
+    if (!id){
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    var cil = document.getElementById(id);
+    if (cil){
+      e.preventDefault();
+      cil.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// zastavit poletování míčku, když si to člověk nepřeje
+if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  document.querySelectorAll('animateMotion').forEach(function(a){ a.remove(); });
+  var g = document.getElementById('ballG');
+  if (g) g.setAttribute('transform', 'translate(372,150)');
+}
+</script>
+
+<script>
+(function(){
+  var cv = document.getElementById('hra-canvas');
+  if (!cv) return;
+  var ctx = cv.getContext('2d');
+  var wrap = cv.parentElement;
+  var over = document.getElementById('gover');
+  var overT = document.getElementById('gover-t');
+  var overP = document.getElementById('gover-p');
+  var overA = document.getElementById('gover-a');
+  var btn = document.getElementById('gbtn');
+  var scNow = document.getElementById('sc-now');
+  var scBest = document.getElementById('sc-best');
+
+  var W = 900, H = 560, dpr = 1;
+  var css = getComputedStyle(document.documentElement);
+  var C = {};
+  function nactiBarvy(){
+    css = getComputedStyle(document.documentElement);
+    function v(n, f){ var x = css.getPropertyValue(n).trim(); return x || f; }
+    C.paper  = v('--paper', '#FFF6EA');
+    C.ink    = v('--ink', '#241809');
+    C.ball   = v('--ball', '#FF6B15');
+    C.green  = v('--green', '#0E7C5A');
+    C.greenD = v('--green-deep', '#0A5B42');
+    C.line   = 'rgba(255,246,234,.85)';
+  }
+  nactiBarvy();
+  if (window.matchMedia) {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq.addEventListener) mq.addEventListener('change', nactiBarvy);
+  }
+
+  function zmer(){
+    var w = Math.max(280, Math.min(wrap.clientWidth, 1100));
+    W = w; H = Math.round(w * 0.62);
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(W * dpr);
+    cv.height = Math.round(H * dpr);
+    cv.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  zmer();
+  if (window.ResizeObserver) new ResizeObserver(zmer).observe(wrap);
+  else window.addEventListener('resize', zmer);
+
+  // ---- perspektiva: z = 0 vzdálený konec, z = 1 blízký konec ----
+  function lerp(a, b, t){ return a + (b - a) * t; }
+  function cxx(){ return W / 2; }
+  function wz(z){ return lerp(W * 0.155, W * 0.40, z); }
+  function yz(z){ return lerp(H * 0.28, H * 0.80, z); }
+  function hu(z){ return lerp(H * 0.14, H * 0.26, z); }   // jedna „výšková jednotka" v px
+  function px(x, y, z){
+    return { X: cxx() + x * wz(z), Y: yz(z) - y * hu(z), R: lerp(W * 0.008, W * 0.019, z) };
+  }
+
+  // ---- stav ----
+  var NET_Y = 0.26;          // výška sítě ve výškových jednotkách
+  var PAL_R = 0.062;         // poloměr pálky jako podíl šířky plátna
+  var PAL_Z = 0.985;         // rovina, ve které pálka stojí
+  var SHOVIVOST = 1.15;      // o kolik je trefa velkorysejší než to, co je vidět
+  var G = 2.6, ODRAZ = 0.68;
+  var stav = 'ukazka';       // ukazka (odbíjí se samo) | hra | konec
+  var vymeny = 0, nej = 0;
+  var pal = { x: 0, cil: 0 };
+  var opp = { x: 0, cil: 0 };
+  var b = { x: 0, y: 0.5, z: 0.06, vx: 0, vy: 0, vz: 0 };
+  var predZ = b.z;
+
+  try { nej = parseInt(localStorage.getItem('skst-nej') || '0', 10) || 0; } catch (e) { nej = 0; }
+  scBest.textContent = nej;
+
+  function rychlost(){ return 1.05 + vymeny * 0.045; }   // bez stropu — zrychluje donekonečna
+
+  // šířka pálky přepočtená do herních souřadnic — trefa tak sedí na to, co hráč vidí
+  function dosah(){ return (W * PAL_R) / wz(PAL_Z) * SHOVIVOST; }
+
+  function podani(){
+    vymeny = 0; scNow.textContent = '0';
+    b = { x: 0, y: 0.60, z: 0.06, vx: (Math.random() - 0.5) * 0.30, vy: 0.55, vz: rychlost() };
+    predZ = b.z;
+    opp.x = 0; opp.cil = 0;
+  }
+
+  // v ukázkovém režimu se míček jen znovu nasadí, hráč nic neprohrává
+  function zmesk(duvod){
+    if (stav === 'ukazka'){ podani(); return; }
+    konec(duvod);
+  }
+
+  function konec(duvod){
+    stav = 'konec';
+    wrap.classList.remove('hraje');
+    if (vymeny > nej){
+      nej = vymeny; scBest.textContent = nej;
+      try { localStorage.setItem('skst-nej', String(nej)); } catch (e) {}
+    }
+    overT.textContent = vymeny === 0 ? 'Těsně vedle' : vymeny + (vymeny === 1 ? ' výměna' : (vymeny < 5 ? ' výměny' : ' výměn'));
+    overP.textContent = projde(vymeny) ? 'Jste na bedně! Zapište se.' : duvod;
+    btn.textContent = 'Znovu';
+    overA.hidden = false;
+    if (projde(vymeny)){
+      gform.hidden = false;
+      try { gname.value = localStorage.getItem('skst-jmeno') || ''; } catch (e) {}
+    } else {
+      gform.hidden = true;
+    }
+    over.hidden = false;
+  }
+
+  function start(){
+    podani();
+    stav = 'hra';
+    over.hidden = true;
+    wrap.classList.add('hraje');
+    wrap.classList.add('hral');
+  }
+  btn.addEventListener('click', function(e){ e.stopPropagation(); start(); });
+
+  // ---- ovládání ----
+  function nastavZUdalosti(clientX){
+    var r = cv.getBoundingClientRect();
+    var t = (clientX - r.left) / r.width;         // 0..1
+    pal.cil = Math.max(-1, Math.min(1, (t - 0.5) * 2.3));
+  }
+  cv.addEventListener('pointermove', function(e){ nastavZUdalosti(e.clientX); });
+  cv.addEventListener('pointerdown', function(e){
+    cv.setPointerCapture && cv.setPointerCapture(e.pointerId);
+    nastavZUdalosti(e.clientX);
+    if (stav === 'ukazka') start();
+  });
+  window.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowLeft')  pal.cil = Math.max(-1, pal.cil - 0.16);
+    if (e.key === 'ArrowRight') pal.cil = Math.min(1, pal.cil + 0.16);
+  });
+
+  // ---- fyzika ----
+  // Míček se s každou výměnou zrychluje bez omezení, takže jeden snímek
+  // rozdělíme na tolik podkroků, aby ani při vysoké rychlosti nepřeskočil
+  // síť ani rovinu pálky.
+  function krok(dt){
+    if (stav === 'ukazka') pal.cil = Math.max(-1, Math.min(1, b.x));
+    pal.x += (pal.cil - pal.x) * Math.min(1, dt * 14);
+    opp.x += (opp.cil - opp.x) * Math.min(1, dt * 6);
+    if (stav === 'konec') return;
+
+    var podkroku = Math.max(1, Math.min(12, Math.ceil(Math.abs(b.vz) * dt / 0.045)));
+    var h = dt / podkroku;
+    for (var k = 0; k < podkroku; k++){
+      if (!fyzika(h)) break;
+    }
+  }
+
+  // vrací false, když se výměna ukončila (prohra nebo nové nasazení)
+  function fyzika(dt){
+    predZ = b.z;
+    b.vy -= G * dt;
+    b.x += b.vx * dt;
+    b.y += b.vy * dt;
+    b.z += b.vz * dt;
+
+    // odraz od desky
+    if (b.y < 0){
+      if (Math.abs(b.x) <= 1.02 && b.z >= -0.02 && b.z <= 1.02){
+        b.y = 0; b.vy = -b.vy * ODRAZ;
+        if (Math.abs(b.vy) < 0.10){ zmesk('Míček dohrál na stole.'); return false; }
+      } else if (b.y < -0.5){
+        zmesk('Míček spadl mimo stůl.'); return false;
+      }
+    }
+
+    // síť
+    if ((predZ < 0.5 && b.z >= 0.5) || (predZ > 0.5 && b.z <= 0.5)){
+      if (b.y < NET_Y){ zmesk('Do sítě. Zkuste míček zvednout výš.'); return false; }
+    }
+
+    if (Math.abs(b.x) > 1.18){ zmesk('Míček letěl mimo stůl.'); return false; }
+
+    // návrat soupeře
+    if (b.z <= 0.04 && b.vz < 0){
+      b.z = 0.045;
+      var cil = (Math.random() - 0.5) * Math.min(1.5, 0.8 + vymeny * 0.05);
+      b.vz = rychlost();
+      b.vx = (cil - b.x) * 0.85;
+      b.y = Math.max(b.y, 0.42);
+      b.vy = 0.70;
+      opp.cil = Math.max(-0.85, Math.min(0.85, b.x));
+    }
+
+    // odpal hráče — vyhodnotí se JEDNOU, přesně v rovině pálky
+    if (predZ < PAL_Z && b.z >= PAL_Z && b.vz > 0
+        && Math.abs(b.x - pal.x) <= dosah() && b.y <= 1.05){
+      b.z = PAL_Z - 0.004;
+      if (stav === 'hra'){ vymeny++; scNow.textContent = vymeny; }
+      b.vz = -rychlost();
+      b.vx = (b.x - pal.x) * 1.7 + (Math.random() - 0.5) * 0.12;
+      b.y = Math.max(b.y, 0.42);
+      b.vy = 0.70;
+    }
+
+    if (b.z > 1.22){ zmesk('Míček proletěl vedle pálky.'); return false; }
+    return true;
+  }
+
+  // ---- kreslení ----
+  function palka(X, Y, R, guma, drevo){
+    ctx.save();
+    ctx.translate(X, Y);
+    ctx.fillStyle = drevo;
+    ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(-R * 0.20, R * 0.78, R * 0.40, R * 1.15, R * 0.20)
+                  : ctx.rect(-R * 0.20, R * 0.78, R * 0.40, R * 1.15);
+    ctx.fill();
+    ctx.fillStyle = '#C98A45';
+    ctx.beginPath(); ctx.ellipse(0, 0, R, R * 1.1, 0, 0, 6.2832); ctx.fill();
+    ctx.fillStyle = guma;
+    ctx.beginPath(); ctx.ellipse(0, -R * 0.03, R * 0.87, R * 0.97, 0, 0, 6.2832); ctx.fill();
+    ctx.restore();
+  }
+
+  function kresli(){
+    ctx.clearRect(0, 0, W, H);
+
+    var cx = cxx(), wF = wz(0), wN = wz(1), yF = yz(0), yN = yz(1);
+
+    // stín pod stolem
+    ctx.fillStyle = 'rgba(0,0,0,.12)';
+    ctx.beginPath(); ctx.ellipse(cx, yN + H * 0.16, wN * 1.06, H * 0.035, 0, 0, 6.2832); ctx.fill();
+
+    // nohy + rám
+    ctx.fillStyle = '#3B2A1B';
+    ctx.fillRect(cx - wN * 0.86, yN, W * 0.019, H * 0.15);
+    ctx.fillRect(cx + wN * 0.84, yN, W * 0.019, H * 0.15);
+    ctx.fillRect(cx - wN * 0.86, yN + H * 0.10, wN * 1.72, H * 0.018);
+    ctx.fillStyle = C.greenD;
+    ctx.fillRect(cx - wN, yN, wN * 2, H * 0.028);
+
+    // deska
+    var g = ctx.createLinearGradient(0, yF, 0, yN);
+    g.addColorStop(0, C.green); g.addColorStop(1, C.greenD);
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.moveTo(cx - wF, yF); ctx.lineTo(cx + wF, yF);
+    ctx.lineTo(cx + wN, yN); ctx.lineTo(cx - wN, yN);
+    ctx.closePath(); ctx.fill();
+
+    // lajny
+    ctx.strokeStyle = C.line; ctx.lineWidth = Math.max(2, W * 0.0032);
+    ctx.beginPath();
+    ctx.moveTo(cx - wF * 0.94, yF + H * 0.012); ctx.lineTo(cx + wF * 0.94, yF + H * 0.012);
+    ctx.lineTo(cx + wN * 0.96, yN - H * 0.012); ctx.lineTo(cx - wN * 0.96, yN - H * 0.012);
+    ctx.closePath(); ctx.stroke();
+    ctx.globalAlpha = .6;
+    ctx.beginPath(); ctx.moveTo(cx, yF + H * 0.012); ctx.lineTo(cx, yN - H * 0.012); ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    // soupeřova pálka (za sítí)
+    var po = px(opp.x, 0.45, 0.03);
+    palka(po.X, po.Y, W * 0.030, '#2B231C', '#A9682F');
+
+    // míček, když je za sítí
+    var bp = px(b.x, b.y, b.z);
+    function micek(){
+      var sh = px(b.x, 0, b.z);
+      ctx.fillStyle = 'rgba(0,0,0,.2)';
+      ctx.beginPath();
+      ctx.ellipse(sh.X, sh.Y, bp.R * 1.15, bp.R * 0.42, 0, 0, 6.2832); ctx.fill();
+      var rg = ctx.createRadialGradient(bp.X - bp.R * .35, bp.Y - bp.R * .4, bp.R * .1, bp.X, bp.Y, bp.R);
+      rg.addColorStop(0, '#FFD9B8'); rg.addColorStop(1, C.ball);
+      ctx.fillStyle = rg;
+      ctx.beginPath(); ctx.arc(bp.X, bp.Y, bp.R, 0, 6.2832); ctx.fill();
+    }
+    if (b.z < 0.5) micek();
+
+    // síť
+    var w5 = wz(0.5), y5 = yz(0.5), nh = hu(0.5) * 0.42, ov = w5 * 0.07;
+    ctx.fillStyle = 'rgba(10,55,42,.92)';
+    ctx.fillRect(cx - w5 - ov, y5 - nh, (w5 + ov) * 2, nh);
+    ctx.strokeStyle = 'rgba(255,246,234,.30)'; ctx.lineWidth = 1;
+    for (var i = 1; i < 34; i++){
+      var xx = cx - w5 - ov + ((w5 + ov) * 2 / 34) * i;
+      ctx.beginPath(); ctx.moveTo(xx, y5 - nh); ctx.lineTo(xx, y5); ctx.stroke();
+    }
+    for (var j = 1; j < 5; j++){
+      var yy = y5 - nh + (nh / 5) * j;
+      ctx.beginPath(); ctx.moveTo(cx - w5 - ov, yy); ctx.lineTo(cx + w5 + ov, yy); ctx.stroke();
+    }
+    ctx.fillStyle = '#FFF6EA';
+    ctx.fillRect(cx - w5 - ov, y5 - nh, (w5 + ov) * 2, Math.max(3, H * 0.008));
+
+    // míček před sítí
+    if (b.z >= 0.5) micek();
+
+    // hráčova pálka
+    var pp = px(pal.x, 0.5, PAL_Z);
+    palka(pp.X, pp.Y, W * PAL_R, '#DC2F32', '#A9682F');
+  }
+
+  // ================= ŽEBŘÍČEK =================
+  var LAD = document.getElementById('ladder');
+  var LADN = document.getElementById('ladder-note');
+  var gform = document.getElementById('gform');
+  var gname = document.getElementById('gname');
+  var dbKol = null;          // kolekce v úložišti, když je k dispozici
+  var sdilene = false;       // sdílený žebříček × jen tohle zařízení
+  var top3 = [];
+  var POHAR = ['#E3A62B', '#AFB6BD', '#B4703A'];   // zlato, stříbro, bronz
+
+  function pohar(i){
+    var c = POHAR[i] || 'currentColor';
+    return '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+      '<path d="M7 3h10v5.5a5 5 0 0 1-10 0V3z" fill="' + c + '"/>' +
+      '<path d="M7 4.6H5.2a2.4 2.4 0 0 0 2.5 4.2" fill="none" stroke="' + c + '" stroke-width="1.5"/>' +
+      '<path d="M17 4.6h1.8a2.4 2.4 0 0 1-2.5 4.2" fill="none" stroke="' + c + '" stroke-width="1.5"/>' +
+      '<path d="M11 13.4h2V17h-2z" fill="' + c + '"/>' +
+      '<rect x="7.8" y="17" width="8.4" height="2.4" rx="1.2" fill="' + c + '"/></svg>';
+  }
+
+  function lokalni(){
+    try { return JSON.parse(localStorage.getItem('skst-zebricek') || '[]') || []; }
+    catch (e) { return []; }
+  }
+  function ulozLokalne(z){
+    var l = lokalni();
+    l.push(z);
+    l.sort(function(a, b){ return b.vymeny - a.vymeny; });
+    try { localStorage.setItem('skst-zebricek', JSON.stringify(l.slice(0, 20))); } catch (e) {}
+  }
+  function seznam(){ return sdilene ? top3 : lokalni().slice(0, 3); }
+  function projde(sk){
+    var l = seznam();
+    return sk > 0 && (l.length < 3 || sk > l[2].vymeny);
+  }
+
+  function vykresliZebricek(){
+    var l = seznam(), ja = null;
+    try { ja = JSON.parse(localStorage.getItem('skst-ja') || 'null'); } catch (e) {}
+    LAD.innerHTML = '';
+    if (!l.length){
+      var p = document.createElement('li');
+      p.className = 'ladder-empty';
+      p.textContent = 'Zatím tu nikdo není. Buďte první.';
+      LAD.appendChild(p);
+    } else {
+      l.slice(0, 3).forEach(function(z, i){
+        var li = document.createElement('li');
+        if (ja && ja.jmeno === z.jmeno && ja.vymeny === z.vymeny) li.className = 'ja';
+        var c = document.createElement('span'); c.className = 'cup'; c.innerHTML = pohar(i);
+        var n = document.createElement('span'); n.className = 'n'; n.textContent = z.jmeno;
+        var v = document.createElement('span'); v.className = 'v'; v.textContent = z.vymeny;
+        li.appendChild(c); li.appendChild(n); li.appendChild(v);
+        LAD.appendChild(li);
+      });
+    }
+    LADN.textContent = sdilene ? 'Nejlepší tři výměny všech, kdo si tu zahráli.'
+                               : 'Zatím jen na tomhle zařízení.';
+  }
+
+  // po zápisu podřízneme kolekci, ať neroste donekonečna
+  function uklid(){
+    if (!dbKol) return;
+    dbKol.orderBy('vymeny', 'desc').limit(60).get().then(function(sn){
+      sn.docs.slice(20).forEach(function(d){
+        dbKol.doc(d.id).delete().catch(function(){});
+      });
+    }).catch(function(){});
+  }
+
+  gform.addEventListener('submit', function(e){
+    e.preventDefault();
+    var jm = (gname.value || '').replace(/\s+/g, ' ').trim().slice(0, 18);
+    if (!jm){ gname.focus(); return; }
+    var z = { jmeno: jm, vymeny: vymeny, kdy: new Date().toISOString() };
+    try {
+      localStorage.setItem('skst-jmeno', jm);
+      localStorage.setItem('skst-ja', JSON.stringify(z));
+    } catch (err) {}
+    ulozLokalne(z);
+    gform.hidden = true;
+    if (dbKol){
+      dbKol.add(z).then(uklid).catch(function(){ sdilene = false; vykresliZebricek(); });
+    } else {
+      vykresliZebricek();
+    }
+  });
+
+  vykresliZebricek();
+
+
+  // ================= VIDEO: YOUTUBE NEBO SOUBOR =================
+  (function(){
+    var k = document.getElementById('klip');
+    var yt = document.getElementById('klip-yt');
+    var v = (window.NASTAVENI && NASTAVENI.video) || {};
+    if (v.youtube){
+      k.remove();
+      yt.hidden = false;
+      yt.style.cssText = 'position:absolute;inset:0';
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + v.youtube +
+              '?rel=0&modestbranding=1&playsinline=1';
+      f.title = 'Video z herny SKST Králův Dvůr';
+      f.allow = 'accelerometer; clipboard-write; encrypted-media; picture-in-picture; fullscreen';
+      f.setAttribute('allowfullscreen', '');
+      f.style.cssText = 'width:100%;height:100%;border:0;display:block';
+      yt.appendChild(f);
+      // vlastní ovládání i výzva ke zvuku nemají u YouTube co dělat
+      ['v-lista','v-stred','v-zvuk','v-plocha'].forEach(function(id){
+        var e = document.getElementById(id) || document.querySelector('.' + id);
+        if (e) e.remove();
+      });
+    } else if (v.soubor){
+      k.src = v.soubor;
+    }
+  })();
+
+  // ================= PŘEHRÁVAČ =================
+  (function(){
+    var w = document.getElementById('prehravac');
+    var k = document.getElementById('klip');
+    if (!w || !k) return;
+    var bHrat = document.getElementById('v-hrat');
+    var bTicho = document.getElementById('v-ticho');
+    var bZvuk = document.getElementById('v-zvuk');
+    var bCele = document.getElementById('v-cele');
+    var plocha = document.getElementById('v-plocha');
+    var posun = document.getElementById('v-posun');
+    var cas = document.getElementById('v-cas');
+    var tahne = false, rucniPauza = false;
+
+    function mmss(t){
+      if (!isFinite(t)) return '0:00';
+      var m = Math.floor(t / 60), sek = Math.floor(t % 60);
+      return m + ':' + (sek < 10 ? '0' : '') + sek;
+    }
+    function stav(){
+      w.classList.toggle('hraje-video', !k.paused);
+      w.classList.toggle('stoji', k.paused);
+      bHrat.setAttribute('aria-label', k.paused ? 'Přehrát' : 'Pozastavit');
+    }
+    function prepni(){
+      if (k.paused){ rucniPauza = false; k.play().catch(function(){}); }
+      else { rucniPauza = true; k.pause(); }
+    }
+    function zvuk(zapnout){
+      k.muted = !zapnout;
+      if (zapnout && k.volume === 0) k.volume = 1;
+      w.classList.toggle('se-zvukem', zapnout);
+      bTicho.setAttribute('aria-label', zapnout ? 'Ztlumit' : 'Zapnout zvuk');
+      if (zapnout && k.paused) k.play().catch(function(){});
+    }
+
+    plocha.addEventListener('click', prepni);
+    bHrat.addEventListener('click', prepni);
+    bTicho.addEventListener('click', function(){ zvuk(k.muted); });
+    bZvuk.addEventListener('click', function(){ zvuk(true); });
+    bCele.addEventListener('click', function(){
+      if (document.fullscreenElement) document.exitFullscreen();
+      else if (w.requestFullscreen) w.requestFullscreen();
+      else if (k.webkitEnterFullscreen) k.webkitEnterFullscreen();
+    });
+    k.addEventListener('play', stav);
+    k.addEventListener('pause', stav);
+    k.addEventListener('loadedmetadata', function(){ cas.textContent = '0:00 / ' + mmss(k.duration); });
+
+    k.addEventListener('timeupdate', function(){
+      if (tahne || !isFinite(k.duration)) return;
+      var p = k.currentTime / k.duration;
+      posun.value = Math.round(p * 1000);
+      posun.style.setProperty('--hotovo', (p * 100).toFixed(1) + '%');
+      cas.textContent = mmss(k.currentTime) + ' / ' + mmss(k.duration);
+    });
+    posun.addEventListener('input', function(){
+      tahne = true;
+      var p = posun.value / 1000;
+      posun.style.setProperty('--hotovo', (p * 100).toFixed(1) + '%');
+      if (isFinite(k.duration)) cas.textContent = mmss(p * k.duration) + ' / ' + mmss(k.duration);
+    });
+    posun.addEventListener('change', function(){
+      if (isFinite(k.duration)) k.currentTime = (posun.value / 1000) * k.duration;
+      tahne = false;
+    });
+
+    // šetříme výkon i data: mimo obrazovku se nepřehrává
+    if (window.IntersectionObserver){
+      new IntersectionObserver(function(z){
+        if (rucniPauza) return;
+        if (z[0].isIntersecting) k.play().catch(function(){});
+        else k.pause();
+      }, { threshold: 0.15 }).observe(w);
+    }
+
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      k.autoplay = false; k.pause(); rucniPauza = true;
+    }
+    stav();
+  })();
+
+  // na dotykovém displeji se neklika
+  var hint = document.getElementById('ghint');
+  if (hint && window.matchMedia && window.matchMedia('(pointer: coarse)').matches){
+    hint.textContent = 'Klepněte a chopte se pálky';
+  }
+
+  podani();   // ukázková výměna běží hned od načtení stránky
+  Object.defineProperty(window, '__skst', { get: function(){ return { micek: b, palka: pal }; } });
+  // hra běží jen když je na obrazovce — jinak zbytečně vytěžuje procesor
+  var videt = true;
+  if (window.IntersectionObserver){
+    new IntersectionObserver(function(z){
+      var bylo = videt;
+      videt = z[0].isIntersecting;
+      if (videt && !bylo) t0 = performance.now();   // ať dt nepřeskočí
+    }, { threshold: 0 }).observe(wrap);
+  }
+
+  var t0 = performance.now();
+  function smycka(t){
+    if (videt){
+      var dt = Math.min((t - t0) / 1000, 0.033);
+      t0 = t;
+      krok(dt);
+      kresli();
+    } else {
+      t0 = t;
+    }
+    requestAnimationFrame(smycka);
+  }
+  requestAnimationFrame(smycka);
+})();
+</script>

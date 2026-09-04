@@ -1,0 +1,20 @@
+{
+  "_napoveda": "Tenhle soubor spravuje klub. Uprav ho, ulož, pushni — web se přenasadí sám. Pozor na čárky, JSON je na ně přísný.",
+
+  "turnaje": [],
+
+  "metodika": [
+    {
+      "kat": "Metodika",
+      "nazev": "Práce nohou — přísunný krok",
+      "popis": "Základ, na kterém stojí všechno ostatní. Postoj, přenos váhy, návrat do středu.",
+      "odkaz": ""
+    },
+    {
+      "kat": "Tipy na trénink",
+      "nazev": "Rozcvička, 10 minut",
+      "popis": "Krátká sestava před tréninkem — ramena, zápěstí, kotníky.",
+      "odkaz": ""
+    }
+  ]
+}

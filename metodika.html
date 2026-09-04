@@ -1,0 +1,232 @@
+<title>Metodika SKST</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400;500;600;700&display=swap">
+
+<style>
+:root{
+  --paper:#FFF6EA; --paper-2:#FDEEDC; --card:#FFFFFF;
+  --ink:#241809; --muted:#7C6752; --line:#EBD9C3;
+  --ball:#FF6B15; --ball-dark:#E05100;
+  --green:#0E7C5A; --green-deep:#0A5B42;
+  --btn-ink:#FFF6EA;
+  --f-display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Figtree","Segoe UI",system-ui,sans-serif;
+  --shell:1060px; --pad:clamp(18px,4.5vw,44px); --r:16px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#191007; --paper-2:#22160C; --card:#251A0F;
+    --ink:#FBEEDD; --muted:#B49B80; --line:#3A2919;
+    --ball:#FF8236; --ball-dark:#FF6B15;
+    --green:#159A70; --green-deep:#0C6E51; --btn-ink:#1B1207;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#191007; --paper-2:#22160C; --card:#251A0F;
+  --ink:#FBEEDD; --muted:#B49B80; --line:#3A2919;
+  --ball:#FF8236; --ball-dark:#FF6B15;
+  --green:#159A70; --green-deep:#0C6E51; --btn-ink:#1B1207;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--f-body);font-size:17px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.05;letter-spacing:-.03em;font-weight:800;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--ball);outline-offset:3px;border-radius:6px}
+.shell{max-width:var(--shell);margin:0 auto;padding-inline:var(--pad)}
+
+/* hlavička */
+.top{background:var(--paper-2);border-bottom:2px solid var(--line)}
+.top .shell{padding-block:20px 30px}
+.zpet{
+  display:inline-flex;align-items:center;gap:8px;text-decoration:none;
+  font-size:.88rem;font-weight:600;color:var(--muted);padding-block:6px;
+}
+.zpet:hover{color:var(--ball)}
+.zpet span{color:var(--ball);font-weight:800}
+h1{margin-top:18px;font-size:clamp(2rem,5vw,3.1rem)}
+.uvod{margin-top:16px;color:var(--muted);max-width:56ch;font-size:1.03rem}
+
+/* filtr */
+.filtr{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.filtr button{
+  cursor:pointer;font:inherit;font-size:.88rem;font-weight:700;
+  padding:9px 16px;border-radius:999px;
+  background:var(--card);color:var(--muted);
+  border:2px solid var(--line);transition:.16s ease;
+}
+.filtr button:hover{border-color:var(--ball);color:var(--ink)}
+.filtr button[aria-pressed="true"]{background:var(--ball);border-color:var(--ball);color:var(--btn-ink)}
+
+/* karty */
+main{padding-block:clamp(34px,5vw,52px) clamp(50px,8vw,84px)}
+.mrizka{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.mat{
+  background:var(--card);border:2px solid var(--line);border-radius:var(--r);
+  padding:22px 24px 20px;display:flex;flex-direction:column;gap:11px;
+}
+.stitek{
+  align-self:flex-start;font-size:.68rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;padding:5px 11px;border-radius:999px;
+  background:color-mix(in srgb, var(--green) 15%, transparent);color:var(--green);
+}
+.stitek.videa{background:color-mix(in srgb, var(--ball) 18%, transparent);color:var(--ball-dark)}
+.stitek.tipy{background:color-mix(in srgb, var(--ink) 8%, transparent);color:var(--muted)}
+.mat h3{font-size:1.14rem}
+.mat p{color:var(--muted);font-size:.94rem}
+.mat .odkaz{
+  margin-top:auto;padding-top:12px;border-top:1px solid var(--line);
+  display:inline-flex;align-items:center;gap:8px;text-decoration:none;
+  font-family:var(--f-display);font-weight:700;font-size:.93rem;
+}
+.mat .odkaz span{color:var(--ball);transition:transform .18s ease}
+.mat .odkaz:hover span{transform:translateX(4px)}
+.prazdno{
+  border:2px dashed var(--line);border-radius:var(--r);
+  padding:30px;color:var(--muted);grid-column:1/-1;
+}
+
+/* přidávání */
+.pridat{
+  margin-top:clamp(34px,5vw,50px);background:var(--paper-2);
+  border:2px solid var(--line);border-radius:var(--r);padding:clamp(22px,3vw,30px);
+}
+.pridat h2{font-size:1.25rem}
+.pridat .pod{margin-top:8px;color:var(--muted);font-size:.92rem;max-width:52ch}
+form{display:grid;gap:12px;margin-top:20px}
+.radek{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+@media (max-width:640px){.radek{grid-template-columns:1fr}}
+label{display:grid;gap:6px;font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+input,select,textarea{
+  padding:11px 14px;border-radius:12px;border:2px solid var(--line);
+  background:var(--card);color:var(--ink);font:inherit;font-size:.95rem;width:100%;
+}
+textarea{min-height:78px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ball)}
+.odeslat{
+  justify-self:start;cursor:pointer;border:0;border-radius:999px;
+  padding:13px 26px;font-family:var(--f-display);font-weight:700;font-size:1rem;
+  background:var(--ball);color:var(--btn-ink);box-shadow:0 8px 0 -2px var(--ball-dark);
+  transition:transform .16s ease,box-shadow .16s ease;
+}
+.odeslat:hover{transform:translateY(-3px);box-shadow:0 11px 0 -2px var(--ball-dark)}
+.hlaska{font-size:.9rem;font-weight:600;color:var(--green);min-height:1.4em}
+
+footer{background:var(--ink);color:#C8B49C;font-size:.85rem}
+footer .shell{padding-block:28px 34px;display:grid;gap:12px}
+footer b{color:var(--paper)}
+.ukazka{
+  margin-top:18px;font-size:.82rem;color:var(--muted);
+  border-left:3px solid var(--ball);padding-left:12px;max-width:62ch;
+}
+</style>
+
+<div class="top">
+  <div class="shell">
+    <a class="zpet" href="index.html"><span>←</span> Zpět na web klubu</a>
+    <h1>Metodika a inspirace</h1>
+    <p class="uvod">Tréninkové plány, videa a tipy na jednom místě — pro trenéry i hráče, kteří chtějí makat i doma.</p>
+    <div class="filtr" id="filtr" role="group" aria-label="Filtr kategorií"></div>
+  </div>
+</div>
+
+<main>
+  <div class="shell">
+    <div class="mrizka" id="mrizka"></div>
+    <p class="ukazka" id="ukazka"></p>
+
+  </div>
+</main>
+
+<footer>
+  <div class="shell">
+    <div><b>Sportovní klub stolního tenisu Králův Dvůr, z.s.</b><br>IČO 19933886 · Jungmannova 292, 267 01 Králův Dvůr</div>
+    <div>Tato stránka je návrh, ne oficiální web klubu.</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var KATEGORIE = ['Metodika', 'Videa', 'Tipy na trénink', 'Pravidla'];
+  var TRIDA = { 'Metodika':'', 'Videa':'videa', 'Tipy na trénink':'tipy', 'Pravidla':'' };
+
+  // Ukázkové položky — obecná témata, ať stránka není prázdná.
+  // Jakmile správce přidá první vlastní materiál, tyhle zmizí.
+  var UKAZKY = [
+    { kat:'Metodika', nazev:'Práce nohou — přísunný krok',
+      popis:'Základ, na kterém stojí všechno ostatní. Postoj, přenos váhy, návrat do středu. Pro mládež i dospělé začátečníky.' },
+    { kat:'Tipy na trénink', nazev:'Rozcvička, 10 minut',
+      popis:'Krátká sestava před tréninkem — ramena, zápěstí, kotníky. Dá se odcvičit i doma před zápasem.' },
+    { kat:'Videa', nazev:'Podání s boční rotací',
+      popis:'Rozbor pohybu zápěstí a kontaktu s míčkem, zpomaleně.' },
+    { kat:'Pravidla', nazev:'Počítání a střídání podání',
+      popis:'Jedenáct bodů, rozdíl dvou, podání po dvou. Shrnutí pro nové hráče a rodiče.' }
+  ];
+
+  var mrizka = document.getElementById('mrizka');
+  var wrapF = document.getElementById('filtr');
+  var ukazkaP = document.getElementById('ukazka');
+  var dbKol = null, polozky = [], vybrana = 'vse';
+
+  ['vse'].concat(KATEGORIE).forEach(function(k){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = k === 'vse' ? 'Vše' : k;
+    b.setAttribute('aria-pressed', k === 'vse' ? 'true' : 'false');
+    b.addEventListener('click', function(){
+      vybrana = k;
+      wrapF.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+      b.setAttribute('aria-pressed','true');
+      vykresli();
+    });
+    wrapF.appendChild(b);
+  });
+
+  function zdroj(){ return polozky.length ? polozky : UKAZKY; }
+
+  function vykresli(){
+    var vse = zdroj();
+    var v = vse.filter(function(p){ return vybrana === 'vse' || p.kat === vybrana; });
+    mrizka.innerHTML = '';
+    if (!v.length){
+      var e = document.createElement('div');
+      e.className = 'prazdno';
+      e.textContent = 'V téhle kategorii zatím nic není.';
+      mrizka.appendChild(e);
+    }
+    v.forEach(function(p){
+      var el = document.createElement('article');
+      el.className = 'mat';
+      var s = document.createElement('span');
+      s.className = 'stitek ' + (TRIDA[p.kat] || '');
+      s.textContent = p.kat;
+      var h = document.createElement('h3'); h.textContent = p.nazev;
+      el.appendChild(s); el.appendChild(h);
+      if (p.popis){ var d = document.createElement('p'); d.textContent = p.popis; el.appendChild(d); }
+      if (p.odkaz && /^https?:\/\//i.test(p.odkaz)){
+        var a = document.createElement('a');
+        a.className = 'odkaz'; a.href = p.odkaz;
+        a.target = '_blank'; a.rel = 'noopener';
+        a.textContent = 'Otevřít ';
+        var sp = document.createElement('span'); sp.textContent = '→';
+        a.appendChild(sp);
+        el.appendChild(a);
+      }
+      mrizka.appendChild(el);
+    });
+    ukazkaP.textContent = polozky.length
+      ? ''
+      : 'Zatím jsou tu ukázkové položky. Materiály se přidávají do souboru data/obsah.json.';
+  }
+
+  vykresli();
+
+})();
+</script>
