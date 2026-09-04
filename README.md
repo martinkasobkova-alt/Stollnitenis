@@ -137,11 +137,6 @@ Vyhraná utkání se ukážou zeleně, prohraná červeně.
 Soubor `data/obsah.json`. Uprav, ulož, pushni. Je to JSON, takže
 pozor na čárky — poslední položka v seznamu za sebou čárku nemá.
 
-### Až web schválíte
-
-V `NASTAVENI` přepni `navrh: false`. Zmizí pruh „Návrh webu"
-nahoře a tečkované podtržení u doplněných údajů.
-
 ---
 
 ## Na co si dát pozor
