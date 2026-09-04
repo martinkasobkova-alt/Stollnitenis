@@ -867,7 +867,7 @@ footer .credit{border-top:1px solid rgba(255,246,234,.16);padding-top:14px;font-
         <span><i class="dot dot-doma"></i> Doma</span>
         <span><i class="dot dot-venku"></i> Venku</span>
         <span><i class="dot dot-hosti"></i> Klub pořádá</span>
-        <span><i class="dot dot-jine"></i> Ostatní akce svazu</span>
+        <span><i class="dot dot-jine"></i> Turnaj svazu</span>
       </p>
       <div class="caldetail" id="cal-detail"></div>
       <p class="note" id="kal-pozn"></p>
@@ -1209,9 +1209,9 @@ var DRUZSTVA = [{"k":"Queens","kat":"Ženy","sout":"2. liga","plny":"SKST Král�
         tag.className = 'zap-t ' + (z.D ? 't-doma' : 't-venku');
       } else {
         var s = u.sezona;
-        text.textContent = (s.nazev || 'Ligové kolo — Divize/KS v kraji') + (s.misto ? ' — ' + s.misto : '');
+        text.textContent = s.nazev + (s.misto ? ' — ' + s.misto : '');
         if (s.typ === 'hosti'){ tag.textContent = 'hostí klub'; tag.className = 'zap-t t-hosti'; }
-        else { tag.textContent = s.typ === 'turnaj' ? 'turnaj svazu' : 'ligový víkend'; tag.className = 'zap-t t-venku'; }
+        else { tag.textContent = 'turnaj svazu'; tag.className = 'zap-t t-venku'; }
       }
       el.appendChild(cas); el.appendChild(text); el.appendChild(tag);
       elDetail.appendChild(el);
