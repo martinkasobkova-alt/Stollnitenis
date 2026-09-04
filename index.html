@@ -984,7 +984,23 @@ body.blocks [data-block]::after{
     .addTo(mapa)
     .bindPopup('<b>Plzeňská 104</b><br>Dětské tréninky');
 
-  mapa.fitBounds(L.latLngBounds([jungmannova.getLatLng(), plzenska.getLatLng()]), { padding: [32, 32] });
+  var hranice = L.latLngBounds([jungmannova.getLatLng(), plzenska.getLatLng()]);
+  mapa.fitBounds(hranice, { padding: [32, 32] });
+
+  // karta, ve které mapa sedí, může ještě chvíli měnit velikost (načtení
+  // fontů, zúžení na mobilu) — Leaflet si jinak "zapamatuje" starý rozměr
+  // a mapa pak vypadá posunutá, dokud s ní někdo nepohne
+  if (window.ResizeObserver){
+    new ResizeObserver(function(){
+      mapa.invalidateSize();
+      mapa.fitBounds(hranice, { padding: [32, 32] });
+    }).observe(el);
+  } else {
+    window.addEventListener('load', function(){
+      mapa.invalidateSize();
+      mapa.fitBounds(hranice, { padding: [32, 32] });
+    });
+  }
 })();
 </script>
 
