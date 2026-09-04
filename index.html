@@ -102,11 +102,11 @@ var NASTAVENI = {
 }
 
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html{scroll-behavior:smooth;overflow-x:clip;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{
   margin:0;background:var(--paper);color:var(--ink);
   font-family:var(--f-body);font-size:17px;line-height:1.6;
-  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;overflow-x:clip;
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -134,6 +134,7 @@ img,svg{max-width:100%}
     radial-gradient(70% 80% at 84% 22%, var(--paper-2), transparent 70%),
     var(--paper);
 }
+.navbar{background:var(--paper)}
 nav.top{display:flex;flex-wrap:wrap;gap:12px 26px;align-items:center;justify-content:space-between;padding-block:24px}
 .wordmark{display:flex;align-items:flex-start;gap:4px;text-decoration:none;font-family:var(--f-display);font-weight:800;font-size:1.06rem;letter-spacing:-.01em}
 .wordmark img{display:block;height:76px;width:auto;object-fit:contain;flex:0 0 auto}
@@ -143,6 +144,7 @@ nav.top a{color:var(--muted);text-decoration:none;padding-block:4px}
 nav.top a:hover{color:var(--ball)}
 .nav-toggle{display:none}
 @media (max-width:760px){
+  .navbar{position:sticky;top:0;z-index:90;box-shadow:0 2px 10px rgba(0,0,0,.08)}
   .nav-toggle{
     display:flex;align-items:center;justify-content:center;order:1;
     background:none;border:2px solid var(--line);border-radius:10px;
@@ -690,7 +692,7 @@ footer .credit{border-top:1px solid rgba(255,246,234,.16);padding-top:14px;font-
 
 </style>
 
-<header class="hero" data-block="hero">
+<div class="navbar">
   <div class="shell">
     <nav class="top">
       <a class="wordmark" href="#"><img src="img/znak-kralova-dvora.png" alt="Znak Králova Dvora"><span>SKST Králův Dvůr</span></a>
@@ -702,10 +704,14 @@ footer .credit{border-top:1px solid rgba(255,246,234,.16);padding-top:14px;font-
         <li><a href="#treninky">Tréninky</a></li>
         <li><a href="#soutez">Zápasy</a></li>
         <li><a href="#kontakt">Kontakt</a></li>
-        <li><a href="https://claude.ai/code/artifact/7fc052fa-f3be-499f-b287-653c38f897a9" target="_blank" rel="noopener">Metodika ↗</a></li>
+        <li><a href="metodika.html">Metodika</a></li>
       </ul>
     </nav>
+  </div>
+</div>
 
+<header class="hero" data-block="hero">
+  <div class="shell">
     <div class="hero-grid">
       <div>
         <p class="eyebrow">Králův Dvůr · okres Beroun</p>
