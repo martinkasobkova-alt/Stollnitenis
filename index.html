@@ -6,6 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <script>
 /* ===================================================================
@@ -674,6 +675,8 @@ nav.top a:hover{color:var(--ball)}
 .ccard dd{margin:0;font-size:1.06rem;line-height:1.5;font-weight:500}
 .ccard a{text-decoration-color:var(--ball);text-decoration-thickness:2px;text-underline-offset:3px}
 .ccard a:hover{color:var(--ball)}
+.mapa{margin-top:16px;height:260px;border-radius:var(--r);border:2px solid var(--line);overflow:hidden;background:var(--paper-2)}
+.mapa .leaflet-popup-content{font-family:var(--f-body);font-size:.9rem;line-height:1.4}
 
 footer{background:var(--ink);color:#C8B49C;font-size:.87rem}
 footer .shell{padding-block:34px 40px;display:grid;gap:14px}
@@ -934,6 +937,7 @@ body.blocks [data-block]::after{
         <a href="https://www.facebook.com/profile.php?id=61558309397887">Facebook — Stolní tenis SKST Králův Dvůr</a>
       </dd></dl>
     </div>
+    <div id="mapa" class="mapa" role="img" aria-label="Mapa — Jungmannova 292 a Plzeňská 104, Králův Dvůr"></div>
   </div>
 </section>
 
@@ -947,6 +951,42 @@ body.blocks [data-block]::after{
     <div class="disclaim">Tato stránka je návrh, ne oficiální web klubu. Kontaktní údaje pocházejí z veřejného rejstříku sportovních subjektů a z facebookové stránky klubu.</div>
   </div>
 </footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ================= MAPA — obě herny =================
+(function(){
+  var el = document.getElementById('mapa');
+  if (!el || !window.L) return;
+
+  function znacka(barva){
+    return L.divIcon({
+      className: '',
+      html: '<span style="display:block;width:18px;height:18px;border-radius:50% 50% 50% 0;' +
+            'background:' + barva + ';border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4);' +
+            'transform:rotate(-45deg)"></span>',
+      iconSize: [18, 18],
+      iconAnchor: [9, 18],
+      popupAnchor: [0, -18]
+    });
+  }
+
+  var mapa = L.map(el, { scrollWheelZoom: false });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19
+  }).addTo(mapa);
+
+  var jungmannova = L.marker([49.9477054, 14.0308678], { icon: znacka('#FF6B15') })
+    .addTo(mapa)
+    .bindPopup('<b>Jungmannova 292</b><br>Mládež a dospělí — hlavní herna');
+  var plzenska = L.marker([49.9418300, 14.0257188], { icon: znacka('#0E7C5A') })
+    .addTo(mapa)
+    .bindPopup('<b>Plzeňská 104</b><br>Dětské tréninky');
+
+  mapa.fitBounds(L.latLngBounds([jungmannova.getLatLng(), plzenska.getLatLng()]), { padding: [32, 32] });
+})();
+</script>
 
 <script>
 // data, která by v ostré verzi přišla z Payloadu
