@@ -140,6 +140,21 @@ nav.top{display:flex;flex-wrap:wrap;gap:12px 26px;align-items:center;justify-con
 nav.top ul{display:flex;flex-wrap:wrap;gap:6px 20px;list-style:none;margin:0;padding:0;font-size:.92rem;font-weight:500}
 nav.top a{color:var(--muted);text-decoration:none;padding-block:4px}
 nav.top a:hover{color:var(--ball)}
+.nav-toggle{display:none}
+@media (max-width:760px){
+  .nav-toggle{
+    display:flex;align-items:center;justify-content:center;order:1;
+    background:none;border:2px solid var(--line);border-radius:10px;
+    width:42px;height:42px;padding:0;cursor:pointer;color:var(--ink);flex:0 0 auto;
+  }
+  .nav-toggle svg{width:20px;height:20px}
+  nav.top ul{
+    display:none;order:2;width:100%;flex-direction:column;gap:2px;
+    padding-top:10px;margin-top:6px;border-top:2px solid var(--line);
+  }
+  nav.top ul.open{display:flex}
+  nav.top a{display:block;padding:11px 6px;font-size:1rem}
+}
 
 .hero-grid{
   display:grid;grid-template-columns:1fr 1.05fr;
@@ -167,7 +182,7 @@ nav.top a:hover{color:var(--ball)}
 @media (max-width:900px){
   .hero-grid{grid-template-columns:1fr;gap:8px}
   .hero .lead{max-width:46ch}
-  .scene{order:2;margin-top:6px}
+  .scene{order:-1;margin-bottom:10px}
 }
 
 /* ---------- hrací scéna v hlavičce ---------- */
@@ -671,7 +686,10 @@ footer .credit{border-top:1px solid rgba(255,246,234,.16);padding-top:14px;font-
   <div class="shell">
     <nav class="top">
       <a class="wordmark" href="#"><img src="img/znak-kralova-dvora.png" alt="Znak Králova Dvora"> SKST Králův Dvůr</a>
-      <ul>
+      <button class="nav-toggle" id="navToggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="navList">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <ul id="navList">
         <li><a href="#klub">O klubu</a></li>
         <li><a href="#treninky">Tréninky</a></li>
         <li><a href="#soutez">Zápasy</a></li>
@@ -1517,6 +1535,23 @@ var DRUZSTVA = [{"k":"Queens","kat":"Ženy","sout":"2. liga","plny":"SKST Král�
 
 })();
 
+
+// Mobilní menu (hamburger)
+(function(){
+  var btn = document.getElementById('navToggle');
+  var list = document.getElementById('navList');
+  if (!btn || !list) return;
+  btn.addEventListener('click', function(){
+    var open = list.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  list.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      list.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    });
+  });
+})();
 
 // Odkazy na kotvy: v izolovaném rámu (náhled artefaktu) samotné href="#..."
 // neposkočí, takže rolování řešíme sami.
