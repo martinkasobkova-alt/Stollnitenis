@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SKST Králův Dvůr</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -540,20 +543,54 @@ nav.top a:hover{color:var(--ball)}
 }
 .filtr button:hover{border-color:var(--ball);color:#fff}
 .filtr button[aria-pressed="true"]{background:var(--ball);border-color:var(--ball);color:#2A1102}
-.kal{display:grid;gap:8px;margin-top:22px}
-.mesic{
-  margin-top:14px;font-size:.72rem;font-weight:700;letter-spacing:.15em;
-  text-transform:uppercase;color:#7FE3BE;
+.calwrap{margin-top:22px}
+.calnav{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:16px}
+.calnav button{
+  cursor:pointer;border:2px solid rgba(255,255,255,.2);background:rgba(0,0,0,.22);
+  color:var(--on-dark);width:38px;height:38px;border-radius:999px;font:inherit;font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;transition:.16s ease;
 }
-.mesic:first-child{margin-top:0}
+.calnav button:hover{border-color:var(--ball)}
+.calnav .cal-mesic{font-family:var(--f-display);font-weight:800;font-size:1.15rem;min-width:13ch;text-align:center}
+.calnav .cal-dnes{
+  width:auto;height:auto;padding:8px 14px;border-radius:999px;font-size:.78rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;
+}
+.caldow{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;font-size:.7rem;color:#8FBFAB;
+  text-transform:uppercase;letter-spacing:.06em;text-align:center;margin-bottom:6px}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.calday{
+  aspect-ratio:1;border-radius:10px;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.1);
+  color:var(--on-dark);font:inherit;font-variant-numeric:tabular-nums;font-size:.86rem;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  cursor:default;padding:2px;
+}
+.calday.empty{visibility:hidden}
+.calday.today{border-color:var(--ball);border-width:2px}
+.calday.has-evt{cursor:pointer}
+.calday.has-evt:hover{border-color:rgba(255,255,255,.4)}
+.calday.selected{background:rgba(255,255,255,.14)}
+.calday .dots{display:flex;gap:3px;flex-wrap:wrap;justify-content:center;max-width:100%}
+.calday i{width:6px;height:6px;border-radius:50%;display:inline-block}
+.dot-doma{background:var(--ball)}
+.dot-venku{background:transparent;border:1.5px solid var(--ball)}
+.dot-hosti{background:var(--green)}
+.dot-jine{background:var(--on-dark-muted)}
+.legenda i.dot{width:11px;height:11px;border-radius:50%}
+.caldetail{margin-top:20px;min-height:64px}
+.caldetail h4{font-family:var(--f-display);font-weight:800;font-size:1rem;color:var(--on-dark);margin-bottom:12px}
+.caldetail .zap{margin-bottom:10px}
+.caldetail .zap:last-child{margin-bottom:0}
+.zap.zap-solo{grid-template-columns:auto 1fr auto}
+@media (max-width:480px){
+  .calday{font-size:.76rem}
+  .calday i{width:5px;height:5px}
+}
 .zap{
   display:grid;grid-template-columns:76px auto 1fr auto;gap:14px;align-items:center;
   background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.14);
   border-radius:12px;padding:12px 16px;
 }
-.zap-d{display:flex;flex-direction:column;line-height:1.15}
-.zap-den{font-family:var(--f-display);font-weight:800;font-size:1.05rem;color:var(--on-dark);white-space:nowrap}
-.zap-dow{font-size:.72rem;color:#8FBFAB;text-transform:lowercase}
 .zap-h{font-variant-numeric:tabular-nums;font-size:.86rem;color:#CFEFE2;white-space:nowrap}
 .zap-s{font-size:.97rem;color:var(--on-dark);min-width:0;overflow:hidden;text-overflow:ellipsis}
 .zap-s em{font-style:normal;color:#8FBFAB;font-size:.86rem}
@@ -570,20 +607,13 @@ nav.top a:hover{color:var(--ball)}
 .zap-cek{font-size:.8rem;color:#7FA294;white-space:nowrap;font-style:italic}
 .t-doma{background:var(--ball);color:#2A1102}
 .t-venku{background:rgba(255,255,255,.14);color:#CFEFE2}
+.t-hosti{background:var(--green);color:#04231A}
 @media (max-width:620px){
-  .zap{grid-template-columns:64px 1fr auto;gap:10px}
-  .zap-h{grid-column:2;font-size:.8rem}
-  .zap-s{grid-column:2;grid-row:2}
-  .zap-t{grid-column:3;grid-row:1}
+  .zap:not(.zap-solo){grid-template-columns:64px 1fr auto;gap:10px}
+  .zap:not(.zap-solo) .zap-h{grid-column:2;font-size:.8rem}
+  .zap:not(.zap-solo) .zap-s{grid-column:2;grid-row:2}
+  .zap:not(.zap-solo) .zap-t{grid-column:3;grid-row:1}
 }
-.kal-vic{
-  margin-top:18px;cursor:pointer;border:0;background:transparent;padding:6px 0;
-  font:inherit;font-size:.88rem;font-weight:600;color:#CFEFE2;
-  text-decoration:underline;text-decoration-color:var(--ball);
-  text-decoration-thickness:2px;text-underline-offset:4px;
-}
-.kal-vic:hover{color:#fff}
-
 /* ---------- turnaje ---------- */
 .turnaje{margin-top:clamp(40px,6vw,64px);border-top:1px solid rgba(255,255,255,.18);padding-top:clamp(30px,4vw,44px)}
 .turnaje h3{font-size:clamp(1.3rem,2.6vw,1.75rem);color:var(--on-dark)}
@@ -792,10 +822,10 @@ body.blocks [data-block]::after{
 
     <div class="days" id="days" role="group" aria-label="Výběr dne"></div>
     <p class="legenda">
-      <span><i style="background:var(--green)"></i> Děti — tělocvična školy</span>
-      <span><i style="background:var(--ball)"></i> Mládež, starší mládež a dospělí</span>
+      <span><i style="background:var(--green)"></i> Děti — Plzeňská 104</span>
+      <span><i style="background:var(--ball)"></i> Mládež, starší mládež a dospělí — Jungmannova 292</span>
     </p>
-    <p class="body-p">Trénuje se na jednom místě — Jungmannova 292, tělocvična ZŠ, zadní vchod.</p>
+    <p class="body-p">Trénujeme na dvou místech: dřívější tréninky dětí jsou na Plzeňské 104, mládež a dospělí trénují na Jungmannově 292 (tělocvična ZŠ, zadní vchod) — to je zároveň naše hlavní herna.</p>
     <div class="slot-wrap"><div class="slots" id="slots"></div></div>
 
     <div class="doch" data-block="dochazka">
@@ -822,11 +852,26 @@ body.blocks [data-block]::after{
 
     <div class="teams" id="druzstva"></div>
 
-    <h3 style="margin-top:clamp(38px,5vw,56px);font-size:clamp(1.3rem,2.6vw,1.75rem);color:var(--on-dark)">Los utkání</h3>
+    <h3 style="margin-top:clamp(38px,5vw,56px);font-size:clamp(1.3rem,2.6vw,1.75rem);color:var(--on-dark)">Kalendář sezóny</h3>
     <div class="filtr" id="filtr" role="group" aria-label="Filtr družstev"></div>
-    <div class="kal" id="kal"></div>
-    <button class="kal-vic" id="kal-vic" type="button">Zobrazit celou sezonu</button>
-    <p class="note" id="kal-pozn"></p>
+    <div class="calwrap">
+      <div class="calnav">
+        <button type="button" id="cal-prev" aria-label="Předchozí měsíc">‹</button>
+        <span class="cal-mesic" id="cal-mesic"></span>
+        <button type="button" id="cal-next" aria-label="Další měsíc">›</button>
+        <button type="button" class="cal-dnes" id="cal-dnes">Dnes</button>
+      </div>
+      <div class="caldow" id="cal-dow"></div>
+      <div class="calgrid" id="cal-grid"></div>
+      <p class="legenda">
+        <span><i class="dot dot-doma"></i> Doma</span>
+        <span><i class="dot dot-venku"></i> Venku</span>
+        <span><i class="dot dot-hosti"></i> Klub pořádá</span>
+        <span><i class="dot dot-jine"></i> Ostatní akce svazu</span>
+      </p>
+      <div class="caldetail" id="cal-detail"></div>
+      <p class="note" id="kal-pozn"></p>
+    </div>
 
     <div class="turnaje" data-block="turnaje">
       <h3>Turnaje</h3>
@@ -864,11 +909,16 @@ body.blocks [data-block]::after{
     <p class="eyebrow">Kde nás najdete</p>
     <h2>Kontakt</h2>
     <div class="cgrid">
-      <dl class="ccard"><dt>Herna</dt><dd>Jungmannova 292, 267 01 Králův Dvůr<br>Tělocvična ZŠ, zadní vchod</dd></dl>
-      <dl class="ccard"><dt>Org. pracovník klubu</dt><dd>Kopřiva Jiří<br>Kód ČAST: 202028</dd></dl>
-      <dl class="ccard"><dt>Telefon</dt><dd><a href="tel:+420603445168">603 445 168</a></dd></dl>
-      <dl class="ccard"><dt>E-mail</dt><dd><a href="mailto:kopriva.ping@seznam.cz">kopriva.ping@seznam.cz</a></dd></dl>
-      <dl class="ccard"><dt>Facebook</dt><dd><a href="https://www.facebook.com/profile.php?id=61558309397887">Stolní tenis — SKST Králův Dvůr</a></dd></dl>
+      <dl class="ccard"><dt>Herna</dt><dd>
+        Jungmannova 292, 267 01 Králův Dvůr<br>Tělocvična ZŠ, zadní vchod — mládež a dospělí<br><br>
+        Plzeňská 104, 267 01 Králův Dvůr<br>dětské tréninky
+      </dd></dl>
+      <dl class="ccard"><dt>Kontakt</dt><dd>
+        Kopřiva Jiří — org. pracovník klubu<br>Kód ČAST: 202028<br>
+        <a href="tel:+420603445168">603 445 168</a><br>
+        <a href="mailto:kopriva.ping@seznam.cz">kopriva.ping@seznam.cz</a><br>
+        <a href="https://www.facebook.com/profile.php?id=61558309397887">Facebook — Stolní tenis SKST Králův Dvůr</a>
+      </dd></dl>
     </div>
   </div>
 </section>
@@ -888,17 +938,17 @@ body.blocks [data-block]::after{
 // data, která by v ostré verzi přišla z Payloadu
 var ROZVRH = [
   { den:"Pondělí", zkr:"Po", terminy:[
-      {od:"16:00",do:"17:00",komu:"Děti — v tělocvičně školy",typ:"deti"},
+      {od:"16:00",do:"17:00",komu:"Děti — Plzeňská 104",typ:"deti"},
       {od:"18:00",do:"20:00",komu:"Mládež, starší mládež a dospělí",typ:"dospeli"}] },
   { den:"Úterý",   zkr:"Út", terminy:[
-      {od:"16:00",do:"17:00",komu:"Děti — v tělocvičně školy",typ:"deti"}] },
+      {od:"16:00",do:"17:00",komu:"Děti — Plzeňská 104",typ:"deti"}] },
   { den:"Středa",  zkr:"St", terminy:[
-      {od:"16:00",do:"17:00",komu:"Děti — v tělocvičně školy",typ:"deti"},
+      {od:"16:00",do:"17:00",komu:"Děti — Plzeňská 104",typ:"deti"},
       {od:"18:00",do:"20:00",komu:"Mládež, starší mládež a dospělí",typ:"dospeli"}] },
   { den:"Čtvrtek", zkr:"Čt", terminy:[
-      {od:"16:00",do:"17:00",komu:"Děti — v tělocvičně školy",typ:"deti"}] },
+      {od:"16:00",do:"17:00",komu:"Děti — Plzeňská 104",typ:"deti"}] },
   { den:"Pátek",   zkr:"Pá", terminy:[
-      {od:"16:00",do:"17:00",komu:"Děti — v tělocvičně školy",typ:"deti"},
+      {od:"16:00",do:"17:00",komu:"Děti — Plzeňská 104",typ:"deti"},
       {od:"18:00",do:"20:00",komu:"Mládež, starší mládež a dospělí",typ:"dospeli"}] },
   { den:"Sobota",  zkr:"So", terminy:[] },
   { den:"Neděle",  zkr:"Ne", terminy:[] }
@@ -950,21 +1000,30 @@ var VYSLEDKY = {};
 var DRUZSTVA = [{"k":"Queens","kat":"Ženy","sout":"2. liga","plny":"SKST Králův Dvůr Queens","stis":"https://stis.ping-pong.cz/druzstvo-65164/svaz-420000/rocnik-2026/soutez-6570"},{"k":"BQueens","kat":"Ženy","sout":"Divize","plny":"SKST Králův Dvůr B Queens","stis":"https://stis.ping-pong.cz/druzstvo-64892/svaz-420103/rocnik-2026/soutez-6492"},{"k":"A","kat":"Muži","sout":"Krajská soutěž 2. třídy","plny":"SKST Králův Dvůr","stis":"https://stis.ping-pong.cz/druzstvo-64893/svaz-420103/rocnik-2026/soutez-6490"},{"k":"B","kat":"Muži","sout":"Regionální soutěž I.","plny":"SKST Králův Dvůr B","stis":"https://stis.ping-pong.cz/druzstvo-65351/svaz-420202/rocnik-2026/soutez-6514"},{"k":"C","kat":"Muži","sout":"Regionální soutěž II.","plny":"SKST Králův Dvůr C","stis":"https://stis.ping-pong.cz/druzstvo-67966/svaz-420202/rocnik-2026/soutez-6515"},{"k":"D","kat":"Muži","sout":"Regionální soutěž III.","plny":"SKST Králův Dvůr D","stis":"https://stis.ping-pong.cz/druzstvo-65352/svaz-420202/rocnik-2026/soutez-6516"}];
 
 // ================= DRUŽSTVA A LOS =================
-// Data pochází z oficiálního CSV exportu kalendáře utkání ze STIS,
-// takže se nikde nic nescrapuje. Nový export = nová data.
+// Zápasy klubu pochází z oficiálního CSV exportu kalendáře utkání ze
+// STIS (ZAPASY), sezónní přehled turnajů a krajských přeborů z
+// termínové listiny Středočeského svazu (data/obsah.json → sezona).
 (function(){
   var wrapD = document.getElementById('druzstva');
   var wrapF = document.getElementById('filtr');
-  var wrapK = document.getElementById('kal');
-  var vic = document.getElementById('kal-vic');
+  var elDow = document.getElementById('cal-dow');
+  var elGrid = document.getElementById('cal-grid');
+  var elMesic = document.getElementById('cal-mesic');
+  var elDetail = document.getElementById('cal-detail');
+  var btnPrev = document.getElementById('cal-prev');
+  var btnNext = document.getElementById('cal-next');
+  var btnDnes = document.getElementById('cal-dnes');
   var pozn = document.getElementById('kal-pozn');
-  if (!wrapK) return;
+  if (!elGrid) return;
 
   var STIS_ODDIL = 'https://stis.ping-pong.cz/oddil-420202028/svaz-420202/rocnik-2026/soutez-6515';
-  var DOW = ['ne','po','út','st','čt','pá','so'];
+  var DOW = ['po','út','st','čt','pá','so','ne'];
   var MES = ['leden','únor','březen','duben','květen','červen',
              'červenec','srpen','září','říjen','listopad','prosinec'];
-  var vybrane = 'vse', vseZobrazeno = false;
+  var vybrane = 'vse';
+  var sezona = [];
+  var aktualni = new Date(); aktualni = new Date(aktualni.getFullYear(), aktualni.getMonth(), 1);
+  var vybranyDen = null;
 
   // ---- kartičky družstev ----
   DRUZSTVA.forEach(function(d){
@@ -1004,75 +1063,160 @@ var DRUZSTVA = [{"k":"Queens","kat":"Ženy","sout":"2. liga","plny":"SKST Král�
     wrapF.appendChild(b);
   });
 
-  function vykresli(){
-    var dnes = new Date(); dnes.setHours(0,0,0,0);
-    var vse = ZAPASY.filter(function(z){ return vybrane === 'vse' || z.t === vybrane; });
-    var budouci = vse.filter(function(z){ return new Date(z.d + 'T23:59') >= dnes; });
-    var zdroj = vseZobrazeno ? vse : budouci.slice(0, 8);
+  elDow.innerHTML = DOW.map(function(d){ return '<span>' + d + '</span>'; }).join('');
 
-    wrapK.innerHTML = '';
-    var poslMesic = '';
-    zdroj.forEach(function(z){
-      var dt = new Date(z.d + 'T' + z.h);
-      var mk = MES[dt.getMonth()] + ' ' + dt.getFullYear();
-      if (mk !== poslMesic){
-        poslMesic = mk;
-        var h = document.createElement('p');
-        h.className = 'mesic'; h.textContent = mk;
-        wrapK.appendChild(h);
-      }
-      var el = document.createElement('div');
-      el.className = 'zap';
-      el.innerHTML =
-        '<div class="zap-d"><span class="zap-den"></span><span class="zap-dow"></span></div>' +
-        '<span class="zap-h"></span>' +
-        '<span class="zap-s"></span>' +
-        '<span class="zap-t"></span>';
-      el.querySelector('.zap-den').textContent = dt.getDate() + '. ' + (dt.getMonth()+1) + '.';
-      el.querySelector('.zap-dow').textContent = DOW[dt.getDay()];
-      var id = z.d + '_' + z.h.replace(':','') + '_' + z.t;
-      var v = VYSLEDKY[id];
-      var odehrano = new Date(z.d + 'T' + z.h) < new Date();
-      var bunka = el.querySelector('.zap-h');
-      if (v && v.length === 2){
-        var nase = z.D ? v[0] : v[1], jejich = z.D ? v[1] : v[0];
-        bunka.className = 'zap-v ' + (nase > jejich ? 'vyhra' : (nase < jejich ? 'prohra' : ''));
-        bunka.textContent = nase + ':' + jejich;
-      } else if (odehrano){
-        bunka.className = 'zap-cek';
-        bunka.textContent = 'čeká na výsledek';
-      } else {
-        bunka.textContent = z.h;
-      }
-      var s = el.querySelector('.zap-s');
-      s.textContent = z.s;
-      if (vybrane === 'vse'){
-        var em = document.createElement('em');
-        em.textContent = '  · ' + z.t;
-        s.appendChild(em);
-      }
-      var t = el.querySelector('.zap-t');
-      t.textContent = z.D ? 'doma' : 'venku';
-      t.className = 'zap-t ' + (z.D ? 't-doma' : 't-venku');
-      if (!z.D && z.m) el.title = z.m;
-      wrapK.appendChild(el);
+  function pad2(n){ return n < 10 ? '0' + n : '' + n; }
+  function isoDen(d){ return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
+
+  // ---- sloučení zápasů a sezónních dat po dnech ----
+  function udalostiDne(){
+    var mapa = {};
+    function pridej(datum, u){ (mapa[datum] || (mapa[datum] = [])).push(u); }
+    ZAPASY.forEach(function(z){
+      if (vybrane !== 'vse' && z.t !== vybrane) return;
+      pridej(z.d, { typ: z.D ? 'doma' : 'venku', zapas: z });
     });
-
-    if (!zdroj.length){
-      var p = document.createElement('p');
-      p.className = 'team-sub'; p.textContent = 'Pro tenhle výběr nemáme v losu žádné utkání.';
-      wrapK.appendChild(p);
-    }
-    vic.textContent = vseZobrazeno ? 'Zobrazit jen nejbližší' : ('Zobrazit celou sezonu (' + vse.length + ' utkání)');
-    vic.hidden = vse.length <= 8;
-    var sVysledkem = Object.keys(VYSLEDKY).length;
-    pozn.textContent = 'Los pochází z oficiálního CSV exportu ze STIS — ten obsahuje termíny, ne skóre. '
-      + (sVysledkem ? 'Výsledky doplňuje klub v administraci.'
-                    : 'Jakmile se začne hrát, doplní se sem i výsledky; vyhraná utkání zeleně, prohraná červeně.');
+    sezona.forEach(function(s){
+      var d = new Date(s.datum + 'T12:00');
+      var konec = new Date((s.do || s.datum) + 'T12:00');
+      while (d <= konec){
+        pridej(isoDen(d), { typ: s.typ, sezona: s });
+        d.setDate(d.getDate() + 1);
+      }
+    });
+    return mapa;
   }
 
-  vic.addEventListener('click', function(){ vseZobrazeno = !vseZobrazeno; vykresli(); });
+  function vychoziDen(mapa){
+    var rok = aktualni.getFullYear(), mesic = aktualni.getMonth();
+    var klice = Object.keys(mapa).filter(function(iso){
+      var d = new Date(iso + 'T12:00');
+      return d.getFullYear() === rok && d.getMonth() === mesic;
+    }).sort();
+    if (!klice.length) return null;
+    var dnesIso = isoDen(new Date());
+    if (klice.indexOf(dnesIso) !== -1) return dnesIso;
+    var buduci = klice.filter(function(iso){ return iso >= dnesIso; });
+    return buduci.length ? buduci[0] : klice[0];
+  }
+
+  function vykresliDetail(mapa){
+    elDetail.innerHTML = '';
+    var udalosti = vybranyDen ? (mapa[vybranyDen] || []) : [];
+    if (!udalosti.length){
+      var p = document.createElement('p');
+      p.className = 'team-sub';
+      p.textContent = vybranyDen ? 'Tenhle den nemá v kalendáři nic naplánováno.' : 'Tenhle měsíc nemá v kalendáři nic naplánováno.';
+      elDetail.appendChild(p);
+      return;
+    }
+    var dt = new Date(vybranyDen + 'T12:00');
+    var nadpis = document.createElement('h4');
+    nadpis.textContent = dt.getDate() + '. ' + MES[dt.getMonth()] + ' ' + dt.getFullYear();
+    elDetail.appendChild(nadpis);
+
+    udalosti.forEach(function(u){
+      var el = document.createElement('div');
+      el.className = 'zap zap-solo';
+      var cas = document.createElement('span'); cas.className = 'zap-h';
+      var text = document.createElement('span'); text.className = 'zap-s';
+      var tag = document.createElement('span'); tag.className = 'zap-t';
+
+      if (u.zapas){
+        var z = u.zapas;
+        var id = z.d + '_' + z.h.replace(':', '') + '_' + z.t;
+        var v = VYSLEDKY[id];
+        var odehrano = new Date(z.d + 'T' + z.h) < new Date();
+        if (v && v.length === 2){
+          var nase = z.D ? v[0] : v[1], jejich = z.D ? v[1] : v[0];
+          cas.className = 'zap-v ' + (nase > jejich ? 'vyhra' : (nase < jejich ? 'prohra' : ''));
+          cas.textContent = nase + ':' + jejich;
+        } else if (odehrano){
+          cas.className = 'zap-cek'; cas.textContent = 'čeká na výsledek';
+        } else {
+          cas.textContent = z.h;
+        }
+        text.textContent = z.s + ' · ' + z.t;
+        if (!z.D && z.m) el.title = z.m;
+        tag.textContent = z.D ? 'doma' : 'venku';
+        tag.className = 'zap-t ' + (z.D ? 't-doma' : 't-venku');
+      } else {
+        var s = u.sezona;
+        text.textContent = (s.nazev || 'Ligové kolo — Divize/KS v kraji') + (s.misto ? ' — ' + s.misto : '');
+        if (s.typ === 'hosti'){ tag.textContent = 'hostí klub'; tag.className = 'zap-t t-hosti'; }
+        else { tag.textContent = s.typ === 'turnaj' ? 'turnaj svazu' : 'ligový víkend'; tag.className = 'zap-t t-venku'; }
+      }
+      el.appendChild(cas); el.appendChild(text); el.appendChild(tag);
+      elDetail.appendChild(el);
+    });
+  }
+
+  function vykresli(){
+    var mapa = udalostiDne();
+    elMesic.textContent = MES[aktualni.getMonth()] + ' ' + aktualni.getFullYear();
+
+    var prvniDen = new Date(aktualni.getFullYear(), aktualni.getMonth(), 1);
+    var posunPondeli = (prvniDen.getDay() + 6) % 7;
+    var pocetDni = new Date(aktualni.getFullYear(), aktualni.getMonth() + 1, 0).getDate();
+    var dnesIso = isoDen(new Date());
+
+    elGrid.innerHTML = '';
+    for (var i = 0; i < posunPondeli; i++){
+      var prazdny = document.createElement('div');
+      prazdny.className = 'calday empty';
+      elGrid.appendChild(prazdny);
+    }
+    for (var den = 1; den <= pocetDni; den++){
+      var d = new Date(aktualni.getFullYear(), aktualni.getMonth(), den);
+      var iso = isoDen(d);
+      var udalosti = mapa[iso] || [];
+      var bunka = document.createElement('button');
+      bunka.type = 'button';
+      bunka.className = 'calday' + (udalosti.length ? ' has-evt' : '') + (iso === dnesIso ? ' today' : '') + (iso === vybranyDen ? ' selected' : '');
+      var cislo = document.createElement('span'); cislo.textContent = den;
+      bunka.appendChild(cislo);
+      if (udalosti.length){
+        var classesPresent = {};
+        udalosti.forEach(function(u){
+          classesPresent[u.typ === 'doma' ? 'dot-doma' : u.typ === 'venku' ? 'dot-venku' : u.typ === 'hosti' ? 'dot-hosti' : 'dot-jine'] = true;
+        });
+        var tecky = document.createElement('span'); tecky.className = 'dots';
+        ['dot-doma', 'dot-venku', 'dot-hosti', 'dot-jine'].forEach(function(cls){
+          if (!classesPresent[cls]) return;
+          var i2 = document.createElement('i'); i2.className = cls; tecky.appendChild(i2);
+        });
+        bunka.appendChild(tecky);
+        bunka.addEventListener('click', (function(iso2){ return function(){ vybranyDen = iso2; vykresli(); }; })(iso));
+      } else {
+        bunka.disabled = true;
+      }
+      elGrid.appendChild(bunka);
+    }
+
+    if (vybranyDen === null) vybranyDen = vychoziDen(mapa);
+    vykresliDetail(mapa);
+    var sVysledkem = Object.keys(VYSLEDKY).length;
+    pozn.textContent = 'Zápasy klubu pochází z oficiálního CSV exportu ze STIS, sezónní přehled turnajů a krajských přeborů z termínové listiny Středočeského svazu stolního tenisu (stav 19. 7. 2026). '
+      + (sVysledkem ? 'Výsledky doplňuje klub v administraci.' : 'Jakmile se začne hrát, doplní se sem i výsledky vlastních zápasů; vyhrané zeleně, prohrané červeně.');
+  }
+
+  btnPrev.addEventListener('click', function(){ aktualni.setMonth(aktualni.getMonth() - 1); vybranyDen = null; vykresli(); });
+  btnNext.addEventListener('click', function(){ aktualni.setMonth(aktualni.getMonth() + 1); vybranyDen = null; vykresli(); });
+  btnDnes.addEventListener('click', function(){
+    var ted = new Date();
+    aktualni = new Date(ted.getFullYear(), ted.getMonth(), 1);
+    vybranyDen = null;
+    vykresli();
+  });
+
   vykresli();
+
+  // sezónní data spravuje klub: data/obsah.json → sezona
+  fetch('data/obsah.json').then(function(r){ return r.json(); }).then(function(o){
+    sezona = (o && o.sezona) || [];
+    vybranyDen = null;
+    vykresli();
+  }).catch(function(){});
 })();
 
 // ================= TURNAJE =================
@@ -1761,7 +1905,7 @@ if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').m
       yt.style.cssText = 'position:absolute;inset:0';
       var f = document.createElement('iframe');
       f.src = 'https://www.youtube-nocookie.com/embed/' + v.youtube +
-              '?rel=0&modestbranding=1&playsinline=1';
+              '?rel=0&modestbranding=1&playsinline=1&autoplay=1&mute=1&loop=1&playlist=' + v.youtube;
       f.title = 'Video z herny SKST Králův Dvůr';
       f.allow = 'accelerometer; clipboard-write; encrypted-media; picture-in-picture; fullscreen';
       f.setAttribute('allowfullscreen', '');

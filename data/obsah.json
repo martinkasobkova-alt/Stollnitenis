@@ -1,7 +1,57 @@
 {
   "_napoveda": "Tenhle soubor spravuje klub. Uprav ho, ulož, pushni — web se přenasadí sám. Pozor na čárky, JSON je na ně přísný.",
+  "_napoveda_sezona": "sezona = termínová listina Středočeského svazu stolního tenisu 2026/2027 (stav k 19. 7. 2026). typ: liga = obecné ligové kolo v kraji bez soupeře, turnaj = celostátní/krajská akce svazu, hosti = akce, kterou hostí náš klub.",
 
   "turnaje": [],
+
+  "sezona": [
+    {"datum":"2026-09-05","do":"2026-09-06","nazev":"BTM ČAST - Praha/Praha","typ":"turnaj"},
+    {"datum":"2026-09-26","nazev":"BTM ČAST U11 - Frýdek Místek","typ":"turnaj"},
+    {"datum":"2026-09-28","nazev":"StčOTm - Neratovice","typ":"turnaj"},
+
+    {"datum":"2026-10-03","do":"2026-10-04","typ":"liga"},
+    {"datum":"2026-10-17","do":"2026-10-18","typ":"liga"},
+    {"datum":"2026-10-24","do":"2026-10-25","nazev":"BTM ČAST - Ostrava/Havířov","typ":"turnaj"},
+    {"datum":"2026-10-28","nazev":"StčOTm - Králův Dvůr","typ":"hosti","misto":"Herna Králův Dvůr"},
+
+    {"datum":"2026-10-31","do":"2026-11-01","typ":"liga"},
+    {"datum":"2026-11-14","do":"2026-11-15","typ":"liga"},
+    {"datum":"2026-11-15","nazev":"BTM ČAST U11 - Prostějov","typ":"turnaj"},
+    {"datum":"2026-11-17","nazev":"Dámský deblový den - Králův Dvůr","typ":"hosti","misto":"Herna Králův Dvůr"},
+    {"datum":"2026-11-21","do":"2026-11-22","nazev":"BTM ČAST - Liberec/Jablonec","typ":"turnaj"},
+    {"datum":"2026-11-28","do":"2026-11-29","typ":"liga"},
+
+    {"datum":"2026-12-05","nazev":"BTM ČAST U11 - Brandýs nad Labem","typ":"turnaj"},
+    {"datum":"2026-12-05","nazev":"Krajské přebory U19","typ":"turnaj"},
+    {"datum":"2026-12-06","nazev":"Krajské přebory U13","typ":"turnaj"},
+    {"datum":"2026-12-12","do":"2026-12-13","typ":"liga"},
+    {"datum":"2026-12-19","nazev":"Krajské přebory U15","typ":"turnaj"},
+    {"datum":"2026-12-20","nazev":"Krajské přebory U17","typ":"turnaj"},
+    {"datum":"2026-12-27","do":"2026-12-29","nazev":"TOP Kemp mládeže","typ":"turnaj"},
+
+    {"datum":"2027-01-09","do":"2027-01-10","typ":"liga"},
+    {"datum":"2027-01-16","do":"2027-01-17","nazev":"BTM ČAST - pevný termín","typ":"turnaj"},
+    {"datum":"2027-01-23","do":"2027-01-24","typ":"liga"},
+    {"datum":"2027-01-30","nazev":"Krajské přebory - dospělí a U11","typ":"turnaj"},
+    {"datum":"2027-01-31","nazev":"Krajské přebory - družstva mládeže","typ":"turnaj"},
+
+    {"datum":"2027-02-06","do":"2027-02-07","typ":"liga"},
+    {"datum":"2027-02-14","nazev":"StčOTm - Brandýs nad Labem","typ":"turnaj"},
+    {"datum":"2027-02-20","do":"2027-02-21","typ":"liga"},
+    {"datum":"2027-02-27","do":"2027-02-28","nazev":"BTM ČAST - pevný termín","typ":"turnaj"},
+
+    {"datum":"2027-03-06","do":"2027-03-07","typ":"liga"},
+    {"datum":"2027-03-13","do":"2027-03-14","typ":"liga"},
+    {"datum":"2027-03-14","nazev":"StčOTm - Neratovice","typ":"turnaj"},
+    {"datum":"2027-03-19","do":"2027-03-21","nazev":"MČR 2027","typ":"turnaj"},
+    {"datum":"2027-03-25","do":"2027-03-28","nazev":"TOP Kemp mládeže","typ":"turnaj"},
+
+    {"datum":"2027-04-03","do":"2027-04-04","typ":"liga"},
+    {"datum":"2027-04-10","do":"2027-04-11","nazev":"BTM ČAST - zatím pracovní termín","typ":"turnaj"},
+    {"datum":"2027-04-17","do":"2027-04-18","typ":"liga"},
+    {"datum":"2027-04-24","do":"2027-04-25","typ":"liga"},
+    {"datum":"2027-04-25","nazev":"StčOTm - Králův Dvůr","typ":"hosti","misto":"Herna Králův Dvůr"}
+  ],
 
   "metodika": [
     {
