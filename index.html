@@ -102,7 +102,7 @@ var NASTAVENI = {
 }
 
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;overflow-x:hidden}
+html{scroll-behavior:smooth;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{
   margin:0;background:var(--paper);color:var(--ink);
   font-family:var(--f-body);font-size:17px;line-height:1.6;
@@ -136,7 +136,8 @@ img,svg{max-width:100%}
 }
 nav.top{display:flex;flex-wrap:wrap;gap:12px 26px;align-items:center;justify-content:space-between;padding-block:24px}
 .wordmark{display:flex;align-items:flex-start;gap:4px;text-decoration:none;font-family:var(--f-display);font-weight:800;font-size:1.06rem;letter-spacing:-.01em}
-.wordmark img{height:76px;width:auto;object-fit:contain;flex:0 0 auto}
+.wordmark img{display:block;height:76px;width:auto;object-fit:contain;flex:0 0 auto}
+.wordmark span{display:block;line-height:1.15;margin:0}
 nav.top ul{display:flex;flex-wrap:wrap;gap:6px 20px;list-style:none;margin:0;padding:0;font-size:.92rem;font-weight:500}
 nav.top a{color:var(--muted);text-decoration:none;padding-block:4px}
 nav.top a:hover{color:var(--ball)}
@@ -153,7 +154,7 @@ nav.top a:hover{color:var(--ball)}
     padding-top:10px;margin-top:6px;border-top:2px solid var(--line);
   }
   nav.top ul.open{display:flex}
-  nav.top a{display:block;padding:11px 6px;font-size:1rem}
+  nav.top ul a{display:block;padding:11px 6px;font-size:1rem}
 }
 
 .hero-grid{
@@ -685,7 +686,7 @@ footer .credit{border-top:1px solid rgba(255,246,234,.16);padding-top:14px;font-
 <header class="hero" data-block="hero">
   <div class="shell">
     <nav class="top">
-      <a class="wordmark" href="#"><img src="img/znak-kralova-dvora.png" alt="Znak Králova Dvora"> SKST Králův Dvůr</a>
+      <a class="wordmark" href="#"><img src="img/znak-kralova-dvora.png" alt="Znak Králova Dvora"><span>SKST Králův Dvůr</span></a>
       <button class="nav-toggle" id="navToggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="navList">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </button>
