@@ -46,7 +46,8 @@ export default async function handler(req, res) {
         cas: String(data.cas || '').slice(0, 30),
         skupina: String(data.skupina || '').slice(0, 80),
         role: data.role === 'Trenér' ? 'Trenér' : 'Hráč',
-        zpetne: !!data.zpetne
+        zpetne: !!data.zpetne,
+        odhlaseno: !!data.odhlaseno
       })
     });
     const text = await odpoved.text();

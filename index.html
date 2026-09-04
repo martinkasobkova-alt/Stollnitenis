@@ -309,10 +309,17 @@ nav.top a:hover{color:var(--ball)}
   border-top:1px solid var(--line);padding-top:12px;
 }
 .zapsani span{
-  font-size:.82rem;padding:4px 11px;border-radius:999px;
+  font-size:.82rem;padding:4px 4px 4px 11px;border-radius:999px;
   background:color-mix(in srgb, var(--ink) 6%, transparent);
+  display:inline-flex;align-items:center;gap:2px;
 }
 .zapsani span.tr{background:color-mix(in srgb, var(--green) 18%, transparent);font-weight:600}
+.zapsani-x{
+  border:0;background:none;cursor:pointer;color:var(--muted);font:inherit;
+  width:18px;height:18px;border-radius:50%;font-size:1rem;line-height:1;
+  display:inline-flex;align-items:center;justify-content:center;padding:0;
+}
+.zapsani-x:hover{background:rgba(0,0,0,.14);color:var(--ink)}
 .zpetne-prep{
   margin-top:16px;cursor:pointer;border:0;background:transparent;padding:6px 0;
   font:inherit;font-size:.88rem;font-weight:600;color:var(--muted);
@@ -1491,7 +1498,17 @@ var DRUZSTVA = [{"k":"Queens","kat":"Ženy","sout":"2. liga","plny":"SKST Král�
       lidi.forEach(function(o){
         var sp = document.createElement('span');
         if (o.role === 'Trenér') sp.className = 'tr';
-        sp.textContent = o.jmeno + (o.role === 'Trenér' ? ' · trenér' : '') + (o.zpetne ? ' · zpětně' : '');
+        var txt = document.createElement('span');
+        txt.textContent = o.jmeno + (o.role === 'Trenér' ? ' · trenér' : '') + (o.zpetne ? ' · zpětně' : '');
+        sp.appendChild(txt);
+        // odhlásit může jen ten, kdo se zapsal teď, na tomhle zařízení —
+        // zápisy z jiných návštěv/telefonů tenhle prohlížeč vůbec nevidí
+        var x = document.createElement('button');
+        x.type = 'button'; x.className = 'zapsani-x';
+        x.setAttribute('aria-label', 'Odhlásit ' + o.jmeno);
+        x.textContent = '×';
+        x.addEventListener('click', function(){ odhlas(t, o); });
+        sp.appendChild(x);
         seznam.appendChild(sp);
       });
       el.appendChild(seznam);
@@ -1521,6 +1538,23 @@ var DRUZSTVA = [{"k":"Queens","kat":"Ženy","sout":"2. liga","plny":"SKST Král�
     }).then(function(r){ return r.json(); })
       .then(function(o){ if (!o || !o.ok) console.warn('Zápis se neuložil:', o); })
       .catch(function(e){ console.warn('Zápis se neodeslal:', e); });
+  }
+
+  // dítě onemocní, plány se změní — jde i zpětně odhlásit, dokud je
+  // zápis vidět v tomhle prohlížeči (viz poznámka u tlačítka výše)
+  function odhlas(t, osoba){
+    zapisy[t.id] = (zapisy[t.id] || []).filter(function(o){ return o !== osoba; });
+    vykresli();
+
+    var zaznam = { trenink: t.id, datum: t.datum, cas: t.od + '–' + t.doo,
+                   skupina: t.komu, jmeno: osoba.jmeno, role: osoba.role,
+                   zpetne: !!osoba.zpetne, odhlaseno: true, kdy: new Date().toISOString() };
+    fetch(NASTAVENI.dochazkaApi, {
+      method: 'POST',
+      body: JSON.stringify(zaznam)
+    }).then(function(r){ return r.json(); })
+      .then(function(o){ if (!o || !o.ok) console.warn('Odhlášení se neuložilo:', o); })
+      .catch(function(e){ console.warn('Odhlášení se neodeslalo:', e); });
   }
 
   prep.addEventListener('click', function(){
