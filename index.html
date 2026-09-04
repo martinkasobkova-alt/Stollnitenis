@@ -102,7 +102,7 @@ var NASTAVENI = {
 }
 
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:hidden}
 body{
   margin:0;background:var(--paper);color:var(--ink);
   font-family:var(--f-body);font-size:17px;line-height:1.6;
@@ -656,7 +656,7 @@ nav.top a:hover{color:var(--ball)}
 .ccard dd{margin:0;font-size:1.06rem;line-height:1.5;font-weight:500}
 .ccard a{text-decoration-color:var(--ball);text-decoration-thickness:2px;text-underline-offset:3px}
 .ccard a:hover{color:var(--ball)}
-.mapa{margin-top:16px;height:160px;border-radius:12px;border:2px solid var(--line);overflow:hidden;background:var(--paper-2)}
+.mapa{margin-top:16px;height:160px;border-radius:12px;border:2px solid var(--line);overflow:hidden;background:var(--paper-2);touch-action:pan-y}
 .mapa .leaflet-popup-content{font-family:var(--f-body);font-size:.9rem;line-height:1.4}
 
 footer{background:var(--ink);color:#C8B49C;font-size:.87rem}
@@ -934,10 +934,21 @@ footer .disclaim{border-top:1px solid rgba(255,246,234,.16);padding-top:16px;fon
     });
   }
 
-  var mapa = L.map(el, { scrollWheelZoom: false });
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    maxZoom: 19
+  // je to jen malá orientační mapka, ne navigace — vypnuté tažení/pinch-zoom
+  // aby prstem na mobilu nešlo omylem "tahat" celou mapu (a s ní stránku)
+  var mapa = L.map(el, {
+    scrollWheelZoom: false,
+    dragging: false,
+    touchZoom: false,
+    doubleClickZoom: false
+  });
+  // CARTO místo obyčejného OSM tile serveru — ten umí i ostré dlaždice
+  // pro Retina displeje (detectRetina), obyčejné OSM dlaždice jsou na
+  // takových telefonech rozmazané.
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19,
+    detectRetina: true
   }).addTo(mapa);
 
   var jungmannova = L.marker([49.9477054, 14.0308678], { icon: znacka('#FF6B15') })
