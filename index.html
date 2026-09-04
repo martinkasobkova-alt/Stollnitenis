@@ -27,6 +27,17 @@ var NASTAVENI = {
   // jako proměnnou prostředí, viz README.
   dochazkaApi: '/api/dochazka',
 
+  // Sdílený žebříček u minihry. Bez týhle konfigurace vidí každý jen svoje
+  // vlastní skóre (jen tohle zařízení). Založ zdarma projekt na
+  // https://console.firebase.google.com, zapni Firestore Database a
+  // vlož sem hodnoty z Project settings → tvoje web app. Postup je v README.
+  firebase: {
+    apiKey: '',
+    authDomain: '',
+    projectId: '',
+    appId: ''
+  },
+
   // Pruh „Návrh webu" nahoře. Až web schválíte, přepni na false.
   navrh: true
 };
@@ -1508,6 +1519,8 @@ if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').m
 }
 </script>
 
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 (function(){
   var cv = document.getElementById('hra-canvas');
@@ -1866,16 +1879,6 @@ if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').m
                                : 'Zatím jen na tomhle zařízení.';
   }
 
-  // po zápisu podřízneme kolekci, ať neroste donekonečna
-  function uklid(){
-    if (!dbKol) return;
-    dbKol.orderBy('vymeny', 'desc').limit(60).get().then(function(sn){
-      sn.docs.slice(20).forEach(function(d){
-        dbKol.doc(d.id).delete().catch(function(){});
-      });
-    }).catch(function(){});
-  }
-
   gform.addEventListener('submit', function(e){
     e.preventDefault();
     var jm = (gname.value || '').replace(/\s+/g, ' ').trim().slice(0, 18);
@@ -1888,13 +1891,35 @@ if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').m
     ulozLokalne(z);
     gform.hidden = true;
     if (dbKol){
-      dbKol.add(z).then(uklid).catch(function(){ sdilene = false; vykresliZebricek(); });
+      // optimisticky přidáme rovnou do zobrazeného pořadí, žádné další čtení netřeba
+      dbKol.add(z).then(function(){
+        top3.push(z);
+        top3.sort(function(a, b){ return b.vymeny - a.vymeny; });
+        top3 = top3.slice(0, 20);
+        vykresliZebricek();
+      }).catch(function(){ vykresliZebricek(); });
     } else {
       vykresliZebricek();
     }
   });
 
   vykresliZebricek();
+
+  // sdílený žebříček přes Firestore — bez vyplněné konfigurace zůstává
+  // jen lokální (viz NASTAVENI.firebase nahoře a README)
+  (function(){
+    var cfg = (window.NASTAVENI && NASTAVENI.firebase) || {};
+    if (!cfg.apiKey || !window.firebase) return;
+    try {
+      firebase.initializeApp(cfg);
+      dbKol = firebase.firestore().collection('zebricek');
+      dbKol.orderBy('vymeny', 'desc').limit(20).get().then(function(sn){
+        top3 = sn.docs.map(function(d){ return d.data(); });
+        sdilene = true;
+        vykresliZebricek();
+      }).catch(function(){ dbKol = null; });
+    } catch (e) { dbKol = null; }
+  })();
 
 
   // ================= VIDEO: VIMEO, YOUTUBE NEBO SOUBOR =================

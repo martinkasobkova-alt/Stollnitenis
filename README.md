@@ -52,14 +52,60 @@ V `index.html` úplně nahoře je blok `NASTAVENI`:
 
 ```js
 video: {
-  youtube: 'IHa4if5xGfE',      // už vyplněno — video klubu na YouTube
-  soubor:  'video/skst.mp4'    // použije se, jen když youtube vymažeš
+  vimeo:   '1223964092',       // vyplněno — video klubu na Vimeu
+  youtube: 'IHa4if5xGfE',      // použije se, jen když vimeo vymažeš
+  soubor:  'video/skst.mp4'    // použije se, jen když vimeo i youtube vymažeš
 }
 ```
 
-Video je na YouTube, takže v repozitáři žádné nemáš a neplatíš
-za přenosy. Kdybys ho chtěla hostovat sama, vymaž `youtube`,
-založ složku `video/` a dej do ní mp4.
+Video je na Vimeu (ne na YouTube), protože jen Vimeo umí přes odkaz
+schovat i jméno a fotku toho, kdo video nahrál. V repozitáři žádné
+video není a neplatíš za přenosy. Kdybys ho chtěla hostovat sama,
+vymaž vimeo i youtube, založ složku `video/` a dej do ní mp4.
+
+### Sdílený žebříček u minihry
+
+Bez nastavení vidí každý jen svoje vlastní skóre (uložené jen v jeho
+prohlížeči). Aby žebříček viděli všichni napříč zařízeními, založ
+zdarma Firebase projekt:
+
+1. Na [console.firebase.google.com](https://console.firebase.google.com)
+   → **Add project** (stačí zdarma tarif Spark).
+2. V levém menu **Build → Firestore Database** → **Create database**
+   → zvol libovolný region → **Start in production mode**.
+3. Tam v záložce **Rules** smaž obsah a vlož:
+
+   ```
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /zebricek/{doc} {
+         allow read: if true;
+         allow create: if request.resource.data.keys().hasOnly(['jmeno','vymeny','kdy'])
+                       && request.resource.data.jmeno is string
+                       && request.resource.data.jmeno.size() <= 18
+                       && request.resource.data.vymeny is int
+                       && request.resource.data.vymeny >= 0
+                       && request.resource.data.vymeny <= 999999
+                       && request.resource.data.kdy is string;
+         allow update, delete: if false;
+       }
+     }
+   }
+   ```
+
+   → **Publish**. Tohle dovolí komukoli žebříček číst a přidat svůj
+   vlastní výsledek, ale nikdo (ani útočník z konzole prohlížeče)
+   nemůže cizí výsledky smazat ani upravit.
+4. V nastavení projektu (ozubené kolo vlevo nahoře → **Project settings**)
+   sjeď na **Your apps** → ikona `</>` (Web) → zaregistruj appku
+   (stačí libovolný název) → zkopíruj hodnoty `apiKey`, `authDomain`,
+   `projectId`, `appId`.
+5. Vlož je do `NASTAVENI.firebase` v `index.html`, ulož, pushni.
+
+Tyhle hodnoty (apiKey a spol.) nejsou tajné heslo — u Firebase je
+běžné mít je přímo v kódu stránky, ochranu dělají až ta **Rules**
+z kroku 3.
 
 ### Rozvrh tréninků
 
