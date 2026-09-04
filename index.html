@@ -650,10 +650,10 @@ nav.top a:hover{color:var(--ball)}
 .ccard{background:var(--card);border:2px solid var(--line);border-radius:var(--r);padding:22px 24px}
 .ccard dt{font-size:.74rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
 .ccard dd{margin:0;font-size:1.06rem;line-height:1.5;font-weight:500}
-.ccard a{text-decoration-color:var(--ball);text-decoration-thickness:2px;text-underline-offset:3px}
-.ccard a:hover{color:var(--ball)}
+.ccard a{text-decoration:none}
+.ccard a:hover{color:var(--ball);text-decoration:underline;text-decoration-color:var(--ball);text-decoration-thickness:2px;text-underline-offset:3px}
 .kontakt-osoba{display:flex;align-items:center;gap:14px;margin-bottom:14px}
-.kontakt-osoba .avatar{width:72px;height:72px;border-radius:50%;object-fit:cover;flex:0 0 auto;border:2px solid var(--line)}
+.kontakt-osoba .avatar{width:84px;height:84px;border-radius:50%;object-fit:cover;flex:0 0 auto;border:2px solid var(--line)}
 .kontakt-osoba div{line-height:1.4}
 .kontakt-osoba b{font-family:var(--f-display);font-size:1.06rem}
 .kontakt-osoba .kontakt-role{font-size:.82rem;color:var(--muted);font-weight:500}
@@ -732,7 +732,7 @@ footer b{color:var(--paper)}
     <div class="fcard">
       <svg class="ic" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="15" fill="#FF6B15"/><circle cx="20" cy="20" r="15" fill="none" stroke="#E05100" stroke-width="2"/><path d="M20 11 V20 L26 24" stroke="#FFF6EA" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
       <div class="val">Tréninky 5× týdně</div>
-      <div class="lab">Pondělí až pátek — děti i dospělí podle rozvrhu.</div>
+      <div class="lab">Pondělí až pátek — děti i dospělí podle rozvrhu a pod vedením odborných trenérů.</div>
     </div>
   </div>
 </section>
@@ -891,7 +891,7 @@ footer b{color:var(--paper)}
     <div class="cgrid">
       <dl class="ccard"><dt>Herna</dt><dd>
         Jungmannova 292, 267 01 Králův Dvůr<br>Tělocvična ZŠ, zadní vchod — mládež a dospělí<br><br>
-        Plzeňská 104, 267 01 Králův Dvůr<br>dětské tréninky
+        Plzeňská 104, 267 01 Králův Dvůr<br>Tělocvična ZŠ — dětské tréninky
         <div id="mapa" class="mapa" role="img" aria-label="Mapa — Jungmannova 292 a Plzeňská 104, Králův Dvůr"></div>
       </dd></dl>
       <dl class="ccard"><dt>Kontakt</dt><dd>
