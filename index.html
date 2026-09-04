@@ -677,11 +677,10 @@ nav.top a:hover{color:var(--ball)}
 .ccard dd{margin:0;font-size:1.06rem;line-height:1.5;font-weight:500}
 .ccard a{text-decoration:none}
 .ccard a:hover{color:var(--ball);text-decoration:underline;text-decoration-color:var(--ball);text-decoration-thickness:2px;text-underline-offset:3px}
-.kontakt-osoba{display:flex;align-items:center;gap:14px;margin-bottom:14px}
-.kontakt-osoba .avatar{width:84px;height:84px;border-radius:50%;object-fit:cover;flex:0 0 auto;border:2px solid var(--line)}
-.kontakt-osoba div{line-height:1.4}
+.osoba-foto{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:12px;display:block;margin-bottom:14px}
+.kontakt-osoba{line-height:1.4;margin-bottom:14px}
 .kontakt-osoba b{font-family:var(--f-display);font-size:1.06rem}
-.kontakt-osoba .kontakt-role{font-size:.82rem;color:var(--muted);font-weight:500}
+.kontakt-osoba .kontakt-role{font-size:.82rem;color:var(--muted);font-weight:500;display:block;margin-top:2px}
 .mapa{margin-top:16px;height:160px;border-radius:12px;border:2px solid var(--line);overflow:hidden;background:var(--paper-2);touch-action:pan-y}
 .mapa .leaflet-popup-content{font-family:var(--f-body);font-size:.9rem;line-height:1.4}
 
@@ -928,10 +927,8 @@ footer .credit{border-top:1px solid rgba(255,246,234,.16);padding-top:14px;font-
         <div id="mapa" class="mapa" role="img" aria-label="Mapa — Jungmannova 292 a Plzeňská 104, Králův Dvůr"></div>
       </dd></dl>
       <dl class="ccard"><dt>Kontakt</dt><dd>
-        <div class="kontakt-osoba">
-          <img src="img/kopriva-jiri.jpg" alt="Kopřiva Jiří" class="avatar">
-          <div><b>Kopřiva Jiří</b><br><span class="kontakt-role">Vedoucí a hlavní trenér klubu · Kód ČAST: 202028</span></div>
-        </div>
+        <img src="img/kopriva-jiri.jpg" alt="Kopřiva Jiří" class="osoba-foto">
+        <div class="kontakt-osoba"><b>Kopřiva Jiří</b><span class="kontakt-role">Vedoucí a hlavní trenér klubu · Kód ČAST: 202028</span></div>
         <a href="tel:+420603445168">603 445 168</a><br>
         <a href="mailto:kopriva.ping@seznam.cz">kopriva.ping@seznam.cz</a><br>
         <a href="https://www.facebook.com/profile.php?id=61558309397887">Facebook — Stolní tenis SKST Králův Dvůr</a>
