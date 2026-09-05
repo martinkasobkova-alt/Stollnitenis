@@ -222,6 +222,44 @@ nav.top a:hover{color:var(--ball)}
   background:radial-gradient(circle at 33% 30%, #FFC28D, var(--ball));
 }
 
+/* ---------- akce ---------- */
+.akce-grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin-top:32px}
+.akce-karta{
+  cursor:pointer;text-align:left;padding:0;display:flex;flex-direction:column;
+  background:var(--card);border:2px solid var(--line);border-radius:var(--r);
+  overflow:hidden;font:inherit;color:inherit;transition:.16s ease;
+}
+.akce-karta:hover{transform:translateY(-3px);border-color:var(--ball)}
+.akce-karta img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:var(--paper-2)}
+.akce-karta .akce-info{padding:16px 18px}
+.akce-karta h3{font-size:1.05rem;letter-spacing:-.01em}
+.akce-karta .akce-datum{margin-top:4px;font-size:.82rem;color:var(--muted)}
+
+.akce-modal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.akce-modal[hidden]{display:none}
+.akce-modal-scrim{position:absolute;inset:0;background:rgba(20,12,4,.6)}
+.akce-modal-card{
+  position:relative;background:var(--paper);border-radius:var(--r);
+  max-width:640px;width:100%;max-height:86vh;overflow-y:auto;padding:32px;
+}
+.akce-modal-close{
+  position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;
+  border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;
+  font-size:1.2rem;line-height:1;display:flex;align-items:center;justify-content:center;
+}
+.akce-modal-close:hover{border-color:var(--ball);color:var(--ball)}
+.akce-modal-card h3{font-size:clamp(1.25rem,3vw,1.6rem);padding-right:40px}
+.akce-modal-datum{color:var(--muted);font-size:.9rem;margin-top:6px}
+.akce-modal-text{margin-top:16px;color:var(--muted);line-height:1.6}
+.akce-modal-text[hidden]{display:none}
+.akce-modal-fotky{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));margin-top:20px}
+.akce-modal-fotky img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;display:block}
+.akce-modal-fb{
+  display:inline-block;margin-top:22px;font-weight:700;color:var(--ball);text-decoration:none;
+}
+.akce-modal-fb:hover{text-decoration:underline}
+.akce-modal-fb[hidden]{display:none}
+
 /* ---------- tréninky ---------- */
 .days{display:flex;flex-wrap:wrap;gap:9px;margin-top:28px}
 .day{
@@ -700,6 +738,7 @@ footer .credit{border-top:1px solid rgba(255,246,234,.16);padding-top:14px;font-
       </button>
       <ul id="navList">
         <li><a href="#klub">O klubu</a></li>
+        <li><a href="#akce">Akce</a></li>
         <li><a href="#treninky">Tréninky</a></li>
         <li><a href="#soutez">Zápasy</a></li>
         <li><a href="#kontakt">Kontakt</a></li>
@@ -825,6 +864,27 @@ footer .credit{border-top:1px solid rgba(255,246,234,.16);padding-top:14px;font-
     </div>
   </div>
 </section>
+
+<section class="sec" id="akce" data-block="akce" hidden>
+  <div class="shell">
+    <p class="eyebrow">Fotky a zážitky</p>
+    <h2>Z našich akcí</h2>
+    <p class="body-p">Turnaje, akce a chvíle z herny — klikněte na tu, kterou chcete vidět víc.</p>
+    <div class="akce-grid" id="akce-grid"></div>
+  </div>
+</section>
+
+<div class="akce-modal" id="akce-modal" hidden>
+  <div class="akce-modal-scrim" id="akce-modal-scrim"></div>
+  <div class="akce-modal-card" role="dialog" aria-modal="true" aria-labelledby="akce-modal-title">
+    <button class="akce-modal-close" id="akce-modal-close" type="button" aria-label="Zavřít">×</button>
+    <h3 id="akce-modal-title"></h3>
+    <p class="akce-modal-datum" id="akce-modal-datum"></p>
+    <p class="akce-modal-text" id="akce-modal-text"></p>
+    <div class="akce-modal-fotky" id="akce-modal-fotky"></div>
+    <a class="akce-modal-fb" id="akce-modal-fb" target="_blank" rel="noopener" hidden>Celé album na Facebooku →</a>
+  </div>
+</div>
 
 <section class="sec" id="treninky" data-block="treninky">
   <div class="shell">
@@ -1360,6 +1420,86 @@ var DRUZSTVA = [{"k":"Queens","kat":"Ženy","sout":"2. liga","plny":"SKST Král�
   // obsah, který spravuje klub: data/obsah.json
   fetch('data/obsah.json').then(function(r){ return r.json(); }).then(function(o){
     turnaje = (o && o.turnaje) || [];
+    vykresli();
+  }).catch(function(){});
+})();
+
+// ================= Z NAŠICH AKCÍ =================
+// Fotky vybírá klub v administraci: pár do galerie přímo na webu +
+// volitelný odkaz na celé album na Facebooku. Sekce se schová, dokud
+// tu není aspoň jedna akce.
+(function(){
+  var sec = document.getElementById('akce');
+  var grid = document.getElementById('akce-grid');
+  if (!sec || !grid) return;
+
+  var modal = document.getElementById('akce-modal');
+  var scrim = document.getElementById('akce-modal-scrim');
+  var closeBtn = document.getElementById('akce-modal-close');
+  var mTitle = document.getElementById('akce-modal-title');
+  var mDatum = document.getElementById('akce-modal-datum');
+  var mText = document.getElementById('akce-modal-text');
+  var mFotky = document.getElementById('akce-modal-fotky');
+  var mFb = document.getElementById('akce-modal-fb');
+
+  var MES = ['ledna','února','března','dubna','května','června',
+             'července','srpna','září','října','listopadu','prosince'];
+  function datumCesky(iso){
+    var d = new Date(iso + 'T12:00');
+    if (isNaN(d)) return iso;
+    return d.getDate() + '. ' + MES[d.getMonth()] + ' ' + d.getFullYear();
+  }
+
+  var akce = [];
+
+  function vykresli(){
+    grid.innerHTML = '';
+    sec.hidden = !akce.length;
+    akce.forEach(function(a, i){
+      var karta = document.createElement('button');
+      karta.type = 'button'; karta.className = 'akce-karta';
+      var img = document.createElement('img');
+      img.src = a.obrazek; img.alt = ''; img.loading = 'lazy';
+      var info = document.createElement('div'); info.className = 'akce-info';
+      var h = document.createElement('h3'); h.textContent = a.nazev;
+      var d = document.createElement('p'); d.className = 'akce-datum'; d.textContent = datumCesky(a.datum);
+      info.appendChild(h); info.appendChild(d);
+      karta.appendChild(img); karta.appendChild(info);
+      karta.addEventListener('click', function(){ otevri(i); });
+      grid.appendChild(karta);
+    });
+  }
+
+  function otevri(i){
+    var a = akce[i];
+    mTitle.textContent = a.nazev;
+    mDatum.textContent = datumCesky(a.datum);
+    mText.textContent = a.text || '';
+    mText.hidden = !a.text;
+    mFotky.innerHTML = '';
+    (a.fotky || []).forEach(function(src){
+      var img = document.createElement('img');
+      img.src = src; img.alt = ''; img.loading = 'lazy';
+      mFotky.appendChild(img);
+    });
+    if (a.facebook){ mFb.href = a.facebook; mFb.hidden = false; } else { mFb.hidden = true; }
+    modal.hidden = false;
+    document.body.style.overflowY = 'hidden';
+  }
+  function zavri(){
+    modal.hidden = true;
+    document.body.style.overflowY = '';
+  }
+  scrim.addEventListener('click', zavri);
+  closeBtn.addEventListener('click', zavri);
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && !modal.hidden) zavri();
+  });
+
+  vykresli();
+
+  fetch('data/obsah.json').then(function(r){ return r.json(); }).then(function(o){
+    akce = (o && o.akce) || [];
     vykresli();
   }).catch(function(){});
 })();

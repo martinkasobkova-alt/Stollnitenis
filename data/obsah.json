@@ -1,8 +1,11 @@
 {
   "_napoveda": "Tenhle soubor spravuje klub. Uprav ho, ulož, pushni — web se přenasadí sám. Pozor na čárky, JSON je na ně přísný.",
   "_napoveda_sezona": "sezona = termínová listina Středočeského svazu stolního tenisu 2026/2027 (stav k 19. 7. 2026), jen jmenované akce. typ: turnaj = celostátní/krajská akce svazu, hosti = akce, kterou hostí náš klub. Obecné 'ligové kolo v kraji' bez soupeře záměrně vynecháno — přesné zápasy klubu už jsou v ZAPASY.",
+  "_napoveda_akce": "akce = sekce 'Z našich akcí' na webu. Fotky (obrazek, fotky) nahraj do img/akce/ a sem napiš jen cestu, např. 'img/akce/2026-turnaj-1.jpg'. facebook je nepovinné — když je vyplněné, u akce se ukáže tlačítko na celé album. text je taky nepovinný.",
 
   "turnaje": [],
+
+  "akce": [],
 
   "sezona": [
     {"datum":"2026-09-05","do":"2026-09-06","nazev":"BTM ČAST - Praha/Praha","typ":"turnaj"},
