@@ -738,7 +738,7 @@ footer .credit{border-top:1px solid rgba(255,246,234,.16);padding-top:14px;font-
       </button>
       <ul id="navList">
         <li><a href="#klub">O klubu</a></li>
-        <li><a href="#akce">Akce</a></li>
+        <li id="nav-akce" hidden><a href="#akce">Akce</a></li>
         <li><a href="#treninky">Tréninky</a></li>
         <li><a href="#soutez">Zápasy</a></li>
         <li><a href="#kontakt">Kontakt</a></li>
@@ -1431,6 +1431,7 @@ var DRUZSTVA = [{"k":"Queens","kat":"Ženy","sout":"2. liga","plny":"SKST Král�
 (function(){
   var sec = document.getElementById('akce');
   var grid = document.getElementById('akce-grid');
+  var navPolozka = document.getElementById('nav-akce');
   if (!sec || !grid) return;
 
   var modal = document.getElementById('akce-modal');
@@ -1455,6 +1456,7 @@ var DRUZSTVA = [{"k":"Queens","kat":"Ženy","sout":"2. liga","plny":"SKST Král�
   function vykresli(){
     grid.innerHTML = '';
     sec.hidden = !akce.length;
+    if (navPolozka) navPolozka.hidden = !akce.length;
     akce.forEach(function(a, i){
       var karta = document.createElement('button');
       karta.type = 'button'; karta.className = 'akce-karta';
