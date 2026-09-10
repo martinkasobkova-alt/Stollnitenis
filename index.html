@@ -1950,9 +1950,13 @@ if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').m
       opp.cil = Math.max(-0.85, Math.min(0.85, b.x));
     }
 
-    // odpal hráče — vyhodnotí se JEDNOU, přesně v rovině pálky
+    // odpal hráče — vyhodnotí se JEDNOU, přesně v rovině pálky.
+    // Pozor: žádná horní mez na b.y — s rostoucí rychlostí má míček čím
+    // dál míň času klesnout před dopadem do roviny pálky, takže sem
+    // systematicky doletí čím dál výš. Pevný strop (dřív b.y<=1.05) tak
+    // kolem 27. výměny znemožnil zásah úplně vždy, bez ohledu na trefu.
     if (predZ < PAL_Z && b.z >= PAL_Z && b.vz > 0
-        && Math.abs(b.x - pal.x) <= dosah() && b.y <= 1.05){
+        && Math.abs(b.x - pal.x) <= dosah()){
       b.z = PAL_Z - 0.004;
       if (stav === 'hra'){ vymeny++; scNow.textContent = vymeny; }
       b.vz = -rychlost();
