@@ -2093,6 +2093,7 @@ if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').m
   var gname = document.getElementById('gname');
   var dbKol = null;          // kolekce v úložišti, když je k dispozici
   var sdilene = false;       // sdílený žebříček × jen tohle zařízení
+  var nacitaniSelhalo = false; // sdílený žebříček existuje, ale teď se ho nepodařilo stáhnout
   var top3 = [];
   var POHAR = ['#E3A62B', '#AFB6BD', '#B4703A'];   // zlato, stříbro, bronz
 
@@ -2129,7 +2130,9 @@ if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').m
     if (!l.length){
       var p = document.createElement('li');
       p.className = 'ladder-empty';
-      p.textContent = 'Zatím tu nikdo není. Buďte první.';
+      p.textContent = nacitaniSelhalo
+        ? 'Žebříček se teď nepodařilo načíst. Zkuste obnovit stránku.'
+        : 'Zatím tu nikdo není. Buďte první.';
       LAD.appendChild(p);
     } else {
       l.slice(0, 3).forEach(function(z, i){
@@ -2143,7 +2146,8 @@ if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').m
       });
     }
     LADN.textContent = sdilene ? 'Nejlepší tři výměny všech, kdo si tu zahráli.'
-                               : 'Zatím jen na tomhle zařízení.';
+                     : (nacitaniSelhalo && !l.length) ? ''
+                     : 'Zatím jen na tomhle zařízení.';
   }
 
   gform.addEventListener('submit', function(e){
@@ -2184,7 +2188,11 @@ if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').m
         top3 = sn.docs.map(function(d){ return d.data(); });
         sdilene = true;
         vykresliZebricek();
-      }).catch(function(){ dbKol = null; });
+      }).catch(function(){
+        dbKol = null;
+        nacitaniSelhalo = true;
+        vykresliZebricek();
+      });
     } catch (e) { dbKol = null; }
   })();
 
