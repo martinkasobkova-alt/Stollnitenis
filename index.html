@@ -715,6 +715,14 @@ nav.top a:hover{color:var(--ball)}
 .mapa{margin-top:16px;height:160px;border-radius:12px;border:2px solid var(--line);overflow:hidden;background:var(--paper-2);touch-action:pan-y}
 .mapa .leaflet-popup-content{font-family:var(--f-body);font-size:.9rem;line-height:1.4}
 
+/* ---------- partneři ---------- */
+.partneri{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
+.partner{display:flex;align-items:center;justify-content:center;background:#fff;border:2px solid var(--line);border-radius:var(--r);padding:16px 24px;min-height:84px;transition:transform .16s ease,border-color .16s ease}
+.partner:hover{transform:translateY(-3px);border-color:var(--ball)}
+.partner img{display:block;height:46px;width:auto;max-width:100%}
+.partner.siroke img{height:38px}
+@media (max-width:560px){.partner{flex:1 1 100%;padding:14px 18px}.partner img{max-width:min(100%,280px)}}
+
 footer{background:var(--ink);color:#C8B49C;font-size:.87rem}
 footer .shell{padding-block:34px 40px;display:grid;gap:14px}
 footer b{color:var(--paper)}
@@ -987,6 +995,20 @@ footer .credit{border-top:1px solid rgba(255,246,234,.16);padding-top:14px;font-
         <a href="mailto:kopriva.ping@seznam.cz">kopriva.ping@seznam.cz</a><br>
         <a href="https://www.facebook.com/profile.php?id=61558309397887">Facebook — Stolní tenis SKST Králův Dvůr</a>
       </dd></dl>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="partneri">
+  <div class="shell">
+    <p class="eyebrow">Děkujeme</p>
+    <h2>Klub podporují</h2>
+    <div class="partneri">
+      <a class="partner siroke" href="https://stcstolnitenis.cz" target="_blank" rel="noopener"><img src="img/partneri/stredocesky-svaz-stolniho-tenisu.png" alt="Středočeský svaz stolního tenisu" loading="lazy"></a>
+      <a class="partner" href="https://www.kraluv-dvur.cz" target="_blank" rel="noopener"><img src="img/partneri/kralov-dvur.png" alt="Město Králův Dvůr" loading="lazy"></a>
+      <a class="partner" href="https://www.ping-pong.cz" target="_blank" rel="noopener"><img src="img/partneri/cast.svg" alt="ČAST — Česká asociace stolního tenisu" loading="lazy"></a>
+      <a class="partner" href="https://www.cuscz.cz" target="_blank" rel="noopener"><img src="img/partneri/ceska-unie-sportu.png" alt="Česká unie sportu" loading="lazy"></a>
+      <a class="partner" href="https://stredoceskykraj.cz" target="_blank" rel="noopener"><img src="img/partneri/stredocesky-kraj.svg" alt="Středočeský kraj" loading="lazy"></a>
     </div>
   </div>
 </section>
