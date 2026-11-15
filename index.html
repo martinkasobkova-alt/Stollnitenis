@@ -1053,11 +1053,10 @@ footer .credit{border-top:1px solid rgba(255,246,234,.16);padding-top:14px;font-
     touchZoom: false,
     doubleClickZoom: false
   });
-  // CARTO místo obyčejného OSM tile serveru — ten umí i ostré dlaždice
-  // pro Retina displeje (detectRetina), obyčejné OSM dlaždice jsou na
-  // takových telefonech rozmazané.
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  // Oficiální dlaždice OpenStreetMap — dřívější CARTO už vyžaduje API klíč.
+  // detectRetina načte na ostrých displejích dlaždice o úroveň níž, ať nejsou rozmazané.
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     maxZoom: 19,
     detectRetina: true
   }).addTo(mapa);
