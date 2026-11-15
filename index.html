@@ -558,6 +558,9 @@ nav.top a:hover{color:var(--ball)}
 .team h3{font-size:1.34rem;color:var(--on-dark);letter-spacing:-.02em}
 .team .lvl{font-family:var(--f-display);font-weight:800;font-size:1.02rem;color:#7FE3BE}
 .team-sub{font-size:.9rem;color:#A9CFBE}
+.team-misto{font-size:.9rem;color:var(--on-dark);line-height:1.4}
+.team-misto b{font-family:var(--f-display);font-size:1.5rem;font-weight:800;color:#7FE3BE;margin-right:2px}
+.team-misto span{display:block;font-size:.82rem;color:#A9CFBE}
 .team details{margin-top:2px}
 .team summary{
   cursor:pointer;font-weight:600;font-size:.92rem;color:#CFEFE2;
@@ -657,6 +660,8 @@ nav.top a:hover{color:var(--ball)}
 .zap-v.vyhra{color:#7FE3BE}
 .zap-v.prohra{color:#F0A08C}
 .zap-cek{font-size:.8rem;color:#7FA294;white-space:nowrap;font-style:italic}
+.zap-det{font-size:.82rem;line-height:1.5;color:#A9CFBE;margin:-4px 0 10px;padding:0 4px 0 14px;border-left:2px solid rgba(127,227,190,.35)}
+.zap-det b{color:var(--on-dark);font-weight:600}
 .t-doma{background:var(--ball);color:#2A1102}
 .t-venku{background:rgba(255,255,255,.14);color:#CFEFE2}
 .t-hosti{background:var(--green);color:#04231A}
@@ -1200,15 +1205,17 @@ var DRUZSTVA = [{"k":"Queens","kat":"Ženy","sout":"2. liga","plny":"SKST Král�
   var sezona = [];
   var aktualni = new Date(); aktualni = new Date(aktualni.getFullYear(), aktualni.getMonth(), 1);
   var vybranyDen = null;
+  var aktualizovanoVysl = '';
 
   // ---- kartičky družstev ----
+  var karty = {};
   DRUZSTVA.forEach(function(d){
     var pocet = ZAPASY.filter(function(z){ return z.t === d.k; }).length;
     var el = document.createElement('article');
     el.className = 'team';
     el.innerHTML =
       '<div class="team-top"><span class="chip"></span><span class="lvl"></span></div>' +
-      '<h3></h3><p class="team-sub"></p>' +
+      '<h3></h3><p class="team-sub"></p><p class="team-misto" hidden></p>' +
       '<a class="stis" target="_blank" rel="noopener">Tabulka a výsledky <span>→</span></a>';
     var chip = el.querySelector('.chip');
     chip.textContent = d.kat;
@@ -1217,6 +1224,7 @@ var DRUZSTVA = [{"k":"Queens","kat":"Ženy","sout":"2. liga","plny":"SKST Král�
     el.querySelector('h3').textContent = d.plny.replace('SKST Králův Dvůr', 'SKST KD');
     el.querySelector('.team-sub').textContent = pocet ? (pocet + ' utkání v sezoně') : 'los zatím není v exportu';
     el.querySelector('.stis').href = d.stis || STIS_ODDIL;
+    karty[d.k] = el;
     wrapD.appendChild(el);
   });
 
@@ -1301,7 +1309,8 @@ var DRUZSTVA = [{"k":"Queens","kat":"Ženy","sout":"2. liga","plny":"SKST Král�
       if (u.zapas){
         var z = u.zapas;
         var id = z.d + '_' + z.h.replace(':', '') + '_' + z.t;
-        var v = VYSLEDKY[id];
+        var det = VYSLEDKY[id];
+        var v = det && det.s;
         var odehrano = new Date(z.d + 'T' + z.h) < new Date();
         if (v && v.length === 2){
           var nase = z.D ? v[0] : v[1], jejich = z.D ? v[1] : v[0];
@@ -1324,6 +1333,45 @@ var DRUZSTVA = [{"k":"Queens","kat":"Ženy","sout":"2. liga","plny":"SKST Král�
       }
       el.appendChild(cas); el.appendChild(text); el.appendChild(tag);
       elDetail.appendChild(el);
+      if (u.zapas && det && det.s) elDetail.appendChild(detailZapasu(det));
+    });
+  }
+
+  // podrobnosti odehraného zápasu: sety, čtyřhry, body našich hráčů
+  function detailZapasu(d){
+    var el = document.createElement('div');
+    el.className = 'zap-det';
+    var radky = [];
+    var celkem = [];
+    if (d.sety) celkem.push('sety <b>' + d.sety + '</b>');
+    if (d.ctyrhry) celkem.push('čtyřhry <b>' + d.ctyrhry + '</b>');
+    if (d.wo) celkem.push('kontumace <b>' + d.wo + '</b>');
+    if (celkem.length) radky.push(celkem.join(' · '));
+    if (d.nasi && d.nasi.length){
+      radky.push('Dvouhry (výhry:prohry): ' + d.nasi.map(function(h){
+        return h[0] + ' <b>' + h[1] + ':' + h[2] + '</b>';
+      }).join(' · '));
+    }
+    if (d.hralo_se){
+      var p = d.hralo_se.split(' '), dd = new Date(p[0]);
+      radky.push('Hrálo se v termínu ' + dd.getDate() + '. ' + (dd.getMonth() + 1) + '. v ' + p[1] + '.');
+    }
+    el.innerHTML = radky.join('<br>');
+    return el;
+  }
+
+  // umístění družstev v tabulce soutěže (data/vysledky.json → druzstva)
+  function doplnTabulky(stav){
+    Object.keys(stav || {}).forEach(function(k){
+      var el = karty[k], s = stav[k];
+      if (!el || !s) return;
+      var m = el.querySelector('.team-misto');
+      m.innerHTML = '<b>' + s.misto + '.</b> místo z ' + s.z +
+        '<span>' + s.body + ' b. · ' + s.zapasu + ' zápasů (' + s.v + ' výher, ' + s.r + ' remíz, ' + s.p + ' proher) · skóre ' + s.skore + '</span>';
+      m.hidden = false;
+      var a = el.querySelector('.stis');
+      a.href = s.tabulka;
+      a.firstChild.textContent = 'Celá tabulka ';
     });
   }
 
@@ -1373,7 +1421,7 @@ var DRUZSTVA = [{"k":"Queens","kat":"Ženy","sout":"2. liga","plny":"SKST Král�
     vykresliDetail(mapa);
     var sVysledkem = Object.keys(VYSLEDKY).length;
     pozn.textContent = 'Zápasy klubu pochází z oficiálního CSV exportu ze STIS, sezónní přehled turnajů a krajských přeborů z termínové listiny Středočeského svazu stolního tenisu (stav 19. 7. 2026). '
-      + (sVysledkem ? 'Výsledky odehraných zápasů jsou ze STIS; vyhrané zeleně, prohrané červeně.' : 'Jakmile se začne hrát, doplní se sem i výsledky vlastních zápasů; vyhrané zeleně, prohrané červeně.');
+      + (sVysledkem ? 'Výsledky a tabulky jsou ze STIS' + (aktualizovanoVysl ? ' (stav k ' + aktualizovanoVysl.split('-').reverse().map(Number).join('. ') + ')' : '') + '; vyhrané zeleně, prohrané červeně.' : 'Jakmile se začne hrát, doplní se sem i výsledky vlastních zápasů; vyhrané zeleně, prohrané červeně.');
   }
 
   btnPrev.addEventListener('click', function(){ aktualni.setMonth(aktualni.getMonth() - 1); vybranyDen = null; vykresli(); });
@@ -1390,6 +1438,8 @@ var DRUZSTVA = [{"k":"Queens","kat":"Ženy","sout":"2. liga","plny":"SKST Král�
   // výsledky odehraných zápasů: data/vysledky.json
   fetch('data/vysledky.json').then(function(r){ return r.json(); }).then(function(o){
     VYSLEDKY = (o && o.vysledky) || {};
+    aktualizovanoVysl = (o && o.aktualizovano) || '';
+    doplnTabulky(o && o.druzstva);
     vykresli();
   }).catch(function(){});
 

@@ -1,121 +1,41 @@
 {
-  "aktualizovano": "2026-11-15",
-  "vysledky": {
-    "2026-10-03_1700_A": [
-      10,
-      6
-    ],
-    "2026-10-03_1700_B": [
-      10,
-      8
-    ],
-    "2026-10-03_1700_C": [
-      3,
-      15
-    ],
-    "2026-10-03_1700_D": [
-      7,
-      11
-    ],
-    "2026-10-10_1600_B": [
-      7,
-      11
-    ],
-    "2026-10-10_1600_C": [
-      7,
-      11
-    ],
-    "2026-10-10_1600_D": [
-      7,
-      11
-    ],
-    "2026-10-17_1000_D": [
-      12,
-      6
-    ],
-    "2026-10-17_1000_Queens": [
-      7,
-      3
-    ],
-    "2026-10-17_1330_A": [
-      10,
-      4
-    ],
-    "2026-10-17_1700_B": [
-      6,
-      12
-    ],
-    "2026-10-17_1700_C": [
-      4,
-      14
-    ],
-    "2026-10-18_1300_A": [
-      2,
-      10
-    ],
-    "2026-10-24_1300_D": [
-      15,
-      3
-    ],
-    "2026-10-24_1600_B": [
-      15,
-      3
-    ],
-    "2026-10-24_1600_C": [
-      5,
-      13
-    ],
-    "2026-10-31_1000_D": [
-      10,
-      8
-    ],
-    "2026-10-31_1000_Queens": [
-      7,
-      3
-    ],
-    "2026-10-31_1500_Queens": [
-      6,
-      4
-    ],
-    "2026-10-31_1700_A": [
-      10,
-      5
-    ],
-    "2026-10-31_1700_B": [
-      1,
-      17
-    ],
-    "2026-10-31_1700_C": [
-      1,
-      17
-    ],
-    "2026-11-01_1000_A": [
-      3,
-      10
-    ],
-    "2026-11-14_1000_D": [
-      12,
-      6
-    ],
-    "2026-11-14_1000_Queens": [
-      8,
-      2
-    ],
-    "2026-11-14_1300_C": [
-      9,
-      9
-    ],
-    "2026-11-14_1500_Queens": [
-      8,
-      2
-    ],
-    "2026-11-14_1600_B": [
-      11,
-      7
-    ],
-    "2026-11-14_1700_A": [
-      8,
-      10
-    ]
-  }
+"aktualizovano": "2026-11-15",
+"vysledky": {
+  "2026-10-03_1700_A": {"s": [10, 6], "sety": "33:24", "ctyrhry": "1:1", "nasi": [["Pěnkavová K.", 4, 0], ["Hucek F.", 3, 1], ["Včelička L.", 0, 3], ["Kopřiva T.", 2, 1]]},
+  "2026-10-03_1700_B": {"s": [10, 8], "sety": "34:34", "ctyrhry": "2:0", "nasi": [["Rada J.", 2, 2], ["Števová V.", 2, 2], ["Matějíčková K.", 0, 2], ["Perlingerová K.", 3, 1], ["Hubingerová N.", 1, 1]]},
+  "2026-10-03_1700_C": {"s": [3, 15], "sety": "17:47", "ctyrhry": "1:1", "nasi": [["Veverka J.", 1, 3], ["Mezei N.", 1, 3], ["Svejkovská V.", 0, 2], ["Švinger M. st.", 0, 2], ["Peřich P.", 0, 2], ["Durcová N.", 0, 2]]},
+  "2026-10-03_1700_D": {"s": [7, 11], "sety": "29:36", "ctyrhry": "1:1", "nasi": [["Durdilová N.", 2, 2], ["Zamazalová K.", 1, 3], ["Marcín O.", 2, 2], ["Švinger M.", 1, 3]]},
+  "2026-10-10_1600_B": {"s": [7, 11], "sety": "31:41", "ctyrhry": "1:1", "nasi": [["Hubingerová N.", 0, 4], ["Perlingerová K.", 0, 3], ["Rada J.", 1, 3], ["Hucek F.", 4, 0], ["Števová V.", 1, 0]], "hralo_se": "2026-10-09 18:30"},
+  "2026-10-10_1600_C": {"s": [7, 11], "sety": "32:38", "ctyrhry": "0:2", "nasi": [["Veverka J.", 3, 1], ["Mezei N.", 1, 3], ["Švinger M. st.", 2, 2], ["Svejkovská V.", 1, 3]]},
+  "2026-10-10_1600_D": {"s": [7, 11], "sety": "30:35", "ctyrhry": "0:1", "wo": "0:5", "nasi": [["Zamazalová K.", 2, 2], ["Durdilová N.", 2, 2], ["Polák F.", 3, 1]]},
+  "2026-10-17_1000_D": {"s": [12, 6], "sety": "25:40", "ctyrhry": "0:2", "nasi": [["Grulík P.", 0, 4], ["Durdilová N.", 2, 2], ["Zamazalová K.", 3, 1], ["Polák F.", 1, 3]]},
+  "2026-10-17_1000_Queens": {"s": [7, 3], "sety": "22:13", "ctyrhry": "1:0", "nasi": [["Hubingerová N.", 0, 1], ["Pěnkavová K.", 3, 0], ["Pěnkavová D.", 3, 0], ["Matějíčková K.", 0, 2]]},
+  "2026-10-17_1330_A": {"s": [10, 4], "sety": "15:34", "ctyrhry": "1:1", "wo": "0:1", "nasi": [["Kopřiva T.", 1, 2], ["Hucek F.", 2, 1], ["Rada J.", 0, 3], ["Včelička L.", 0, 2]]},
+  "2026-10-17_1700_B": {"s": [6, 12], "sety": "25:41", "ctyrhry": "1:1", "wo": "1:0", "nasi": [["Hubingerová N.", 0, 4], ["Števová V.", 1, 2], ["Rada J.", 1, 3], ["Matějíčková K.", 2, 2]]},
+  "2026-10-17_1700_C": {"s": [4, 14], "sety": "20:48", "ctyrhry": "0:2", "nasi": [["Veverka J.", 1, 3], ["Mezei N.", 1, 3], ["Švinger M. st.", 1, 1], ["Svejkovská V.", 1, 1], ["Peřich P.", 0, 2], ["Durcová N.", 0, 2]]},
+  "2026-10-18_1300_A": {"s": [2, 10], "sety": "31:11", "ctyrhry": "2:0", "nasi": [["Hucek F.", 3, 0], ["Kopřiva T.", 3, 0], ["Števová V.", 1, 1], ["Včelička L.", 1, 1]]},
+  "2026-10-24_1300_D": {"s": [15, 3], "sety": "11:48", "ctyrhry": "1:0", "wo": "0:5", "nasi": [["Durdilová N.", 2, 2], ["Poláčková N.", 0, 4], ["Kopřiva J.", 0, 4]]},
+  "2026-10-24_1600_B": {"s": [15, 3], "sety": "19:47", "ctyrhry": "1:1", "nasi": [["Perlingerová K.", 1, 3], ["Rada J.", 1, 3], ["Hubingerová N.", 0, 4], ["Matějíčková K.", 0, 4]]},
+  "2026-10-24_1600_C": {"s": [5, 13], "sety": "46:25", "ctyrhry": "1:1", "nasi": [["Veverka J.", 4, 0], ["Švinger M. st.", 1, 3], ["Mezei N.", 3, 1], ["Peřich P.", 4, 0]]},
+  "2026-10-31_1000_D": {"s": [10, 8], "sety": "33:26", "ctyrhry": "1:1", "nasi": [["Marcín O.", 3, 1], ["Veverka F.", 1, 3], ["Polák F.", 3, 1], ["Grulík P.", 2, 2]]},
+  "2026-10-31_1000_Queens": {"s": [7, 3], "sety": "24:14", "ctyrhry": "1:0", "nasi": [["Matějíčková K.", 0, 3], ["Pěnkavová K.", 3, 0], ["Pěnkavová D.", 3, 0]]},
+  "2026-10-31_1500_Queens": {"s": [6, 4], "sety": "19:13", "ctyrhry": "1:0", "wo": "0:1", "nasi": [["Pěnkavová D.", 2, 0], ["Pěnkavová K.", 3, 0], ["Matějíčková K.", 0, 3]]},
+  "2026-10-31_1700_A": {"s": [10, 5], "sety": "34:18", "ctyrhry": "1:1", "nasi": [["Kopřiva T.", 2, 1], ["Mezei N.", 0, 3], ["Včelička L.", 3, 0], ["Pěnkavová K.", 4, 0]]},
+  "2026-10-31_1700_B": {"s": [1, 17], "sety": "15:52", "ctyrhry": "0:2", "nasi": [["Mezei N.", 0, 4], ["Matějíčková K.", 0, 4], ["Hubingerová N.", 0, 4], ["Rada J.", 1, 3]], "hralo_se": "2026-10-30 18:00"},
+  "2026-10-31_1700_C": {"s": [1, 17], "sety": "17:51", "ctyrhry": "0:2", "nasi": [["Peřich P.", 0, 4], ["Durcová N.", 0, 4], ["Durdilová N.", 0, 4], ["Švinger M. st.", 1, 3]]},
+  "2026-11-01_1000_A": {"s": [3, 10], "sety": "12:32", "ctyrhry": "1:1", "wo": "0:1", "nasi": [["Včelička L.", 1, 1], ["Kopřiva T.", 1, 1], ["Mezei N.", 0, 3], ["Švinger M. st.", 0, 3]]},
+  "2026-11-14_1000_D": {"s": [12, 6], "sety": "28:43", "ctyrhry": "0:2", "nasi": [["Marcín O.", 3, 1], ["Šopík L.", 1, 3], ["Polák F.", 2, 2], ["Grulík P.", 0, 4]]},
+  "2026-11-14_1000_Queens": {"s": [8, 2], "sety": "27:12", "ctyrhry": "1:0", "nasi": [["Sobková M.", 1, 1], ["Pěnkavová K.", 3, 0], ["Pěnkavová D.", 3, 0], ["Matějíčková K.", 0, 1]]},
+  "2026-11-14_1300_C": {"s": [9, 9], "sety": "32:34", "ctyrhry": "1:1", "nasi": [["Mezei N.", 3, 1], ["Švinger M.", 2, 2], ["Švinger M. st.", 1, 3], ["Svejkovská V.", 2, 2]]},
+  "2026-11-14_1500_Queens": {"s": [8, 2], "sety": "25:12", "ctyrhry": "1:0", "nasi": [["Matějíčková K.", 1, 2], ["Pěnkavová K.", 3, 0], ["Pěnkavová D.", 3, 0]]},
+  "2026-11-14_1600_B": {"s": [11, 7], "sety": "29:35", "ctyrhry": "1:1", "nasi": [["Rada J.", 3, 1], ["Perlingerová K.", 2, 2], ["Veverka J.", 1, 3], ["Peřich P.", 0, 4]]},
+  "2026-11-14_1700_A": {"s": [8, 10], "sety": "26:36", "ctyrhry": "1:0", "wo": "0:1", "nasi": [["Kopřiva T.", 4, 0], ["Včelička L.", 3, 1], ["Mezei N.", 0, 4], ["Švinger M. st.", 0, 4]]}
+},
+"druzstva": {
+  "D": {"misto": 7, "z": 8, "zapasu": 6, "v": 1, "r": 0, "p": 5, "skore": "39:69", "body": 3, "tabulka": "https://stis.ping-pong.cz/tabulka/svaz-420202/rocnik-2026/soutez-6516"},
+  "C": {"misto": 9, "z": 10, "zapasu": 6, "v": 1, "r": 1, "p": 4, "skore": "37:71", "body": 4, "tabulka": "https://stis.ping-pong.cz/tabulka/svaz-420202/rocnik-2026/soutez-6515"},
+  "B": {"misto": 10, "z": 11, "zapasu": 6, "v": 1, "r": 0, "p": 5, "skore": "34:74", "body": 3, "tabulka": "https://stis.ping-pong.cz/tabulka/svaz-420202/rocnik-2026/soutez-6514"},
+  "A": {"misto": 7, "z": 12, "zapasu": 6, "v": 3, "r": 0, "p": 3, "skore": "45:43", "body": 9, "tabulka": "https://stis.ping-pong.cz/tabulka/svaz-420103/rocnik-2026/soutez-6490"},
+  "Queens": {"misto": 1, "z": 10, "zapasu": 5, "v": 5, "r": 0, "p": 0, "skore": "36:14", "body": 15, "tabulka": "https://stis.ping-pong.cz/tabulka/svaz-420000/rocnik-2026/soutez-6570"}
+}
 }
